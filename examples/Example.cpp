@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string>
 
+#include "Kedarium/Color.hpp"
+
 // Constants
 const unsigned int WINDOW_WIDTH  {800};
 const unsigned int WINDOW_HEIGHT {600};
@@ -80,11 +82,13 @@ int main()
   }
 
   // Clear Color
-  GLclampf red   {0.0f};
-  GLclampf blue  {0.3f};
-  GLclampf green {0.3f};
-  GLclampf alpha {1.0f};
-  glClearColor(red, blue, green, alpha);
+  kdr::Color::RGBA clearColor {kdr::Color::Black};
+  glClearColor(
+    clearColor.red,
+    clearColor.green,
+    clearColor.blue,
+    clearColor.alpha
+  );
 
   // Shaders
   GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
