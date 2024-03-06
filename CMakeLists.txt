@@ -21,4 +21,5 @@ find_package(GLEW REQUIRED)
 find_package(glfw3 REQUIRED)
 
 # Subdirectories
+add_subdirectory(src)
 add_subdirectory(examples)

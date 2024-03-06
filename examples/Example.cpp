@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string>
 
+#include "Kedarium/Core.hpp"
 #include "Kedarium/Color.hpp"
 
 // Constants
@@ -164,6 +165,11 @@ int main()
   glBindVertexArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+  // Info Logs
+  kdr::Core::printEngineInfo();
+  std::cout << '\n';
+  kdr::Core::printVersionInfo();
 
   // Main Loop
   while (!glfwWindowShouldClose(glfwWindow))
