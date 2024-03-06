@@ -57,3 +57,11 @@ kdr::Graphics::Shader::Shader(const std::string& vertexPath, const std::string& 
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
 }
+
+kdr::Graphics::VBO::VBO(GLfloat vertices[], GLsizeiptr size)
+{
+  glGenBuffers(1, &this->ID);
+  this->Bind();
+  glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+  this->Unbind();
+}
