@@ -80,22 +80,18 @@ int main()
   };
 
   // VAO, VBO, and EBO
-  GLenum VAO;
+  kdr::Graphics::VAO VAO1;
   kdr::Graphics::VBO VBO1 {vertices, sizeof(vertices)};
   kdr::Graphics::EBO EBO1 {indices, sizeof(indices)};
 
-  glGenVertexArrays(1, &VAO);
-
-  glBindVertexArray(VAO);
+  VAO1.Bind();
   VBO1.Bind();
   EBO1.Bind();
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)0);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-  glEnableVertexAttribArray(1);
+  VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(GLfloat), (void*)0);
+  VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
 
-  glBindVertexArray(0);
+  VAO1.Unbind();
   VBO1.Unbind();
   EBO1.Unbind();
 
@@ -110,11 +106,12 @@ int main()
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT);
     defaultShader.Use();
-    glBindVertexArray(VAO);
+    VAO1.Bind();
     glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
     glfwSwapBuffers(glfwWindow);
   }
 
+  VAO1.Delete();
   VBO1.Delete();
   EBO1.Delete();
   defaultShader.Delete();

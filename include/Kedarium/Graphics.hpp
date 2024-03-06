@@ -31,12 +31,12 @@ namespace kdr
         /**
          * @brief Activates the shader program for use.
          */
-        void Use()
+        void Use() const
         { glUseProgram(this->ID); }
         /**
          * @brief Deletes the shader program.
          */
-        void Delete()
+        void Delete() const
         { glDeleteProgram(this->ID); }
 
       private:
@@ -60,17 +60,17 @@ namespace kdr
         /**
          * @brief Binds the VBO for use.
          */
-        void Bind()
+        void Bind() const
         { glBindBuffer(GL_ARRAY_BUFFER, this->ID); }
         /**
          * @brief Unbinds the VBO.
          */
-        void Unbind()
+        void Unbind() const
         { glBindBuffer(GL_ARRAY_BUFFER, 0); }
         /**
          * @brief Deletes the VBO.
          */
-        void Delete()
+        void Delete() const
         { glDeleteBuffers(1, &this->ID); }
 
       private:
@@ -94,18 +94,63 @@ namespace kdr
         /**
          * @brief Binds the EBO for use.
          */
-        void Bind()
+        void Bind() const
         { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ID); }
         /**
          * @brief Unbinds the EBO.
          */
-        void Unbind()
+        void Unbind() const
         { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
         /**
          * @brief Deletes the EBO.
          */
-        void Delete()
+        void Delete() const
         { glDeleteBuffers(1, &this->ID); }
+
+      private:
+        GLuint ID;
+    };
+
+    /**
+     * @brief Class representing a Vertex Array Object (VAO).
+     */
+    class VAO
+    {
+      public:
+        /**
+         * @brief Constructs a VAO object.
+         * 
+         * This constructor generates a new VAO ID.
+         */
+        VAO()
+        { glGenVertexArrays(1, &this->ID); }
+
+        /**
+         * @brief Binds the VAO for use.
+         */
+        void Bind() const
+        { glBindVertexArray(this->ID); }
+        /**
+         * @brief Unbinds the VAO.
+         */
+        void Unbind() const
+        { glBindVertexArray(0); }
+        /**
+         * @brief Deletes the VAO.
+         */
+        void Delete() const
+        { glDeleteVertexArrays(1, &this->ID); }
+        /**
+         * @brief Links a vertex buffer object (VBO) to a layout in the VAO.
+         *
+         * @param VBO The VBO to link.
+         * @param layout The layout location.
+         * @param size The size of each element.
+         * @param type The data type of the elements.
+         * @param stride The stride between consecutive elements.
+         * @param offset The offset of the first element in the buffer.
+         */
+        void LinkAttrib(const kdr::Graphics::VBO& VBO, GLuint layout, GLuint size, GLenum type, GLsizeiptr stride, const void* offset) const;
 
       private:
         GLuint ID;
