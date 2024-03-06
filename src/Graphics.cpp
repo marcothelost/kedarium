@@ -65,3 +65,11 @@ kdr::Graphics::VBO::VBO(GLfloat vertices[], GLsizeiptr size)
   glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
   this->Unbind();
 }
+
+kdr::Graphics::EBO::EBO(GLuint indices[], GLsizeiptr size)
+{
+  glGenBuffers(1, &this->ID);
+  this->Bind();
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+  this->Unbind();
+}
