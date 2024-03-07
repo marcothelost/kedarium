@@ -24,6 +24,23 @@ namespace kdr
      * This function requires OpenGL, GLEW, and GLFW libraries.
      */
     void printVersionInfo();
+
+    /**
+     * @brief Initializes GLFW.
+     *
+     * @return True if GLFW initialization is successful, false otherwise.
+     */
+    bool initializeGlfw();
+    /**
+     * @brief Initializes GLEW.
+     *
+     * @return True if GLEW initialization is successful, false otherwise.
+     */
+    bool initializeGlew();
+    /**
+     * @brief Terminates GLFW.
+     */
+    void terminate();
   }
 }
 
