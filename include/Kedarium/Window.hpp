@@ -7,6 +7,7 @@
 #include <string>
 
 #include "Core.hpp"
+#include "Color.hpp"
 
 namespace kdr
 {
@@ -68,6 +69,22 @@ namespace kdr
       std::string getTitle() const
       { return this->title; }
 
+      /**
+       * Sets the clear color for the window.
+       * 
+       * @param color The color to set as the clear color.
+       */
+      void setClearColor(const kdr::Color::RGBA& color)
+      {
+        this->clearColor = color;
+        glClearColor(
+          color.red,
+          color.green,
+          color.blue,
+          color.alpha
+        );
+      }
+
     protected:
       /**
        * @brief Virtual function to update the window state.
@@ -84,6 +101,7 @@ namespace kdr
       std::string  title  {"GLFW"};
 
       GLFWwindow* glfwWindow {NULL};
+      kdr::Color::RGBA clearColor {kdr::Color::Black};
 
       /**
        * @brief Initializes the GLFW window.

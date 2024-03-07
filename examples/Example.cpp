@@ -90,18 +90,13 @@ int main()
     WINDOW_HEIGHT,
     WINDOW_TITLE
   };
+  window.setClearColor(kdr::Color::Black);
 
   // Initializing the Window
   window.initialize();
 
   // Clear Color
   kdr::Color::RGBA clearColor {kdr::Color::Black};
-  glClearColor(
-    clearColor.red,
-    clearColor.green,
-    clearColor.blue,
-    clearColor.alpha
-  );
 
   // Info Logs
   kdr::Core::printEngineInfo();

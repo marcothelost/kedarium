@@ -25,6 +25,12 @@ bool kdr::Window::_initialize()
     return false;
   }
   glfwMakeContextCurrent(this->glfwWindow);
+  glClearColor(
+    this->clearColor.red,
+    this->clearColor.green,
+    this->clearColor.blue,
+    this->clearColor.alpha
+  );
   if (!kdr::Core::initializeGlew()) return false;
   return true;
 }
