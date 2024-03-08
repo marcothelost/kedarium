@@ -9,6 +9,8 @@
 #include "Core.hpp"
 #include "Color.hpp"
 
+void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+
 namespace kdr
 {
   /**
@@ -68,6 +70,15 @@ namespace kdr
        */
       std::string getTitle() const
       { return this->title; }
+      /**
+       * @brief Gets the delta time.
+       *
+       * This function returns the delta time for the window.
+       *
+       * @return The delta time.
+       */
+      float getDeltaTime() const
+      { return this->deltaTime; }
 
       /**
        * Sets the clear color for the window.
@@ -103,12 +114,21 @@ namespace kdr
       GLFWwindow* glfwWindow {NULL};
       kdr::Color::RGBA clearColor {kdr::Color::Black};
 
+      float deltaTime {0.f};
+      float lastTime {(float)glfwGetTime()};
+
       /**
        * @brief Initializes the GLFW window.
        *
        * @return True if initialization is successful, false otherwise.
        */
       bool _initialize();
+      /**
+       * @brief Updates the delta time.
+       *
+       * This function updates the delta time for the window.
+       */
+      void _updateDeltaTime();
       /**
        * @brief Updates the window state.
        */

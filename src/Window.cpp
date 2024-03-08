@@ -1,5 +1,11 @@
 #include "Kedarium/Window.hpp"
 
+void framebufferSizeCallback(GLFWwindow* window, int width, int height)
+{
+  (void)window;
+  glViewport(0, 0, width, height);
+}
+
 void kdr::Window::loop()
 {
   while (!glfwWindowShouldClose(this->glfwWindow))
@@ -25,6 +31,7 @@ bool kdr::Window::_initialize()
     return false;
   }
   glfwMakeContextCurrent(this->glfwWindow);
+  glfwSetFramebufferSizeCallback(this->glfwWindow, framebufferSizeCallback);
   glClearColor(
     this->clearColor.red,
     this->clearColor.green,
@@ -35,9 +42,17 @@ bool kdr::Window::_initialize()
   return true;
 }
 
+void kdr::Window::_updateDeltaTime()
+{
+  float currentTime = (float)glfwGetTime();
+  this->deltaTime = currentTime - lastTime;
+  this->lastTime = currentTime;
+}
+
 void kdr::Window::_update()
 {
   glfwPollEvents();
+  this->_updateDeltaTime();
   this->update();
 }
 
