@@ -43,6 +43,64 @@ namespace kdr
         float y {0.f};
         float z {0.f};
     };
+
+    /**
+     * @brief Class representing a 4x4 matrix.
+     */
+    class Mat4
+    {
+      public:
+        /**
+         * @brief Default constructor.
+         *
+         * Initializes all elements of the matrix to zero.
+         */
+        Mat4()
+        {
+          for (int y = 0; y < 4; y++)
+          {
+            for (int x = 0; x < 4; x++)
+            {
+              elements[y][x] = 0.f;
+            }
+          }
+        }
+        /**
+         * @brief Constructor initializing the diagonal elements of the matrix with a specified value.
+         *
+         * @param diagonalValue The value to set for the diagonal elements.
+         */
+        Mat4(const float diagonalValue)
+        {
+          for (int y = 0; y < 4; y++)
+          {
+            for (int x = 0; x < 4; x++)
+            {
+              elements[y][x] = x == y ? diagonalValue : 0.f;
+            }
+          }
+        }
+
+        /**
+         * @brief Overloaded subscript operator for accessing elements of the matrix.
+         *
+         * @param index The index of the row.
+         * @return A pointer to the specified row of the matrix.
+         */
+        float* operator[](int index)
+        { return this->elements[index]; }
+        /**
+         * @brief Overloaded const subscript operator for accessing elements of the matrix.
+         *
+         * @param index The index of the row.
+         * @return A const pointer to the specified row of the matrix.
+         */
+        const float* operator[](int index) const
+        { return this->elements[index]; }
+
+      private:
+        float elements[4][4];
+    };
   }
 }
 
