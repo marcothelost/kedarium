@@ -63,7 +63,7 @@ namespace kdr
          * @param vec The vector to add.
          * @return The result of the addition.
          */
-        Vec3 operator+(const kdr::Space::Vec3& vec) const
+        kdr::Space::Vec3 operator+(const kdr::Space::Vec3& vec) const
         {
           return kdr::Space::Vec3(
             this->x + vec.x,
@@ -77,7 +77,7 @@ namespace kdr
          * @param vec The vector to subtract.
          * @return The result of the subtraction.
          */
-        Vec3 operator-(const kdr::Space::Vec3& vec) const
+        kdr::Space::Vec3 operator-(const kdr::Space::Vec3& vec) const
         {
           return kdr::Space::Vec3(
             this->x - vec.x,
@@ -93,7 +93,7 @@ namespace kdr
          * @return The result of the multiplication.
          */
         template <typename T>
-        Vec3 operator*(const T scalar)
+        kdr::Space::Vec3 operator*(const T scalar)
         {
           return kdr::Space::Vec3(
             static_cast<float>(this->x * scalar),
@@ -110,7 +110,7 @@ namespace kdr
          * @return The result of the multiplication.
          */
         template <typename T>
-        friend Vec3 operator*(const T scalar, const kdr::Space::Vec3& vec)
+        friend kdr::Space::Vec3 operator*(const T scalar, const kdr::Space::Vec3& vec)
         {
           return kdr::Space::Vec3(
             static_cast<float>(vec.x * scalar),
@@ -204,6 +204,25 @@ namespace kdr
          */
         const float* operator[](int index) const
         { return this->elements[index]; }
+
+        /**
+         * @brief Multiplies this matrix by another matrix.
+         * 
+         * @param mat The matrix to multiply by.
+         * @return The result of the matrix multiplication.
+         */
+        kdr::Space::Mat4 operator*(const kdr::Space::Mat4& mat) const
+        {
+          kdr::Space::Mat4 result;
+          for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+              for (int k = 0; k < 4; k++) {
+                result[i][j] += mat[i][k] * this->elements[k][j];
+              }
+            }
+          }
+          return result;
+        }
 
       private:
         float elements[4][4];

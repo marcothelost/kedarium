@@ -10,12 +10,19 @@
 #include "Kedarium/Window.hpp"
 #include "Kedarium/Space.hpp"
 #include "Kedarium/Keys.hpp"
+#include "Kedarium/Camera.hpp"
 #include "Kedarium/Debug.hpp"
 
-// Constants
-const unsigned int WINDOW_WIDTH  {800};
-const unsigned int WINDOW_HEIGHT {600};
-const std::string  WINDOW_TITLE  {"GLFW"};
+// Window Settings
+constexpr unsigned int WINDOW_WIDTH  {800};
+constexpr unsigned int WINDOW_HEIGHT {600};
+const    std::string  WINDOW_TITLE  {"GLFW"};
+
+// Camera Settings
+constexpr float CAMERA_FOV    {60.f};
+constexpr float CAMERA_ASPECT {(float)WINDOW_WIDTH / WINDOW_HEIGHT};
+constexpr float CAMERA_NEAR   {0.1f};
+constexpr float CAMERA_FAR    {100.f};
 
 // Vertices and Indices
 GLfloat vertices[] = {
@@ -61,36 +68,15 @@ class ExampleWindow : public kdr::Window
 
   protected:
     void update()
-    {
-      if (kdr::Keys::isPressed(this->getGlfwWindow(), kdr::Key::W))
-      {
-        this->z += 5.f * this->getDeltaTime();
-      }
-      else if (kdr::Keys::isPressed(this->getGlfwWindow(), kdr::Key::S))
-      {
-        this->z -= 5.f * this->getDeltaTime();
-      }
-    }
+    {}
 
     void render()
     {
       this->defaultShader.Use();
       this->VAO1.Bind();
 
-      kdr::Space::Mat4 model      {1.f};
-      kdr::Space::Mat4 view       {1.f};
-      kdr::Space::Mat4 projection {1.f};
-
-      view = kdr::Space::translate(view, {0.f, 0.f, this->z});
-      projection = kdr::Space::perspective(60.f, (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.f);
-
-      GLuint modelLoc = glGetUniformLocation(defaultShader.getID(), "model");
-      GLuint viewLoc = glGetUniformLocation(defaultShader.getID(), "view");
-      GLuint projLoc = glGetUniformLocation(defaultShader.getID(), "proj");
-
-      glUniformMatrix4fv(modelLoc, 1, GL_FALSE, kdr::Space::valuePointer(model));
-      glUniformMatrix4fv(viewLoc, 1, GL_FALSE, kdr::Space::valuePointer(view));
-      glUniformMatrix4fv(projLoc, 1, GL_FALSE, kdr::Space::valuePointer(projection));
+      this->camera.updateMatrix();
+      this->camera.applyMatrix(this->defaultShader.getID(), "cameraMatrix");
 
       glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
     }
@@ -106,7 +92,12 @@ class ExampleWindow : public kdr::Window
     kdr::Graphics::VBO VBO1 {vertices, sizeof(vertices)};
     kdr::Graphics::EBO EBO1 {indices, sizeof(indices)};
 
-    float z {-3.f};
+    kdr::Camera camera {
+      CAMERA_FOV,
+      CAMERA_ASPECT,
+      CAMERA_NEAR,
+      CAMERA_FAR
+    };
 };
 
 int main()
