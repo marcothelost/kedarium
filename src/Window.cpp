@@ -49,10 +49,20 @@ void kdr::Window::_updateDeltaTime()
   this->lastTime = currentTime;
 }
 
+void kdr::Window::_updateCamera()
+{
+  if (this->boundShaderID == 0 || this->boundCamera == NULL) {
+    return;
+  }
+  this->boundCamera->updateMatrix();
+  this->boundCamera->applyMatrix(this->boundShaderID, "cameraMatrix");
+}
+
 void kdr::Window::_update()
 {
   glfwPollEvents();
   this->_updateDeltaTime();
+  this->_updateCamera();
   this->update();
 }
 

@@ -16,7 +16,7 @@
 // Window Settings
 constexpr unsigned int WINDOW_WIDTH  {800};
 constexpr unsigned int WINDOW_HEIGHT {600};
-const    std::string  WINDOW_TITLE  {"GLFW"};
+const     std::string  WINDOW_TITLE  {"GLFW"};
 
 // Camera Settings
 constexpr float CAMERA_FOV    {60.f};
@@ -73,11 +73,8 @@ class ExampleWindow : public kdr::Window
     void render()
     {
       this->defaultShader.Use();
+      this->setBoundShaderID(this->defaultShader.getID());
       this->VAO1.Bind();
-
-      this->camera.updateMatrix();
-      this->camera.applyMatrix(this->defaultShader.getID(), "cameraMatrix");
-
       glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
     }
 
@@ -91,19 +88,20 @@ class ExampleWindow : public kdr::Window
     kdr::Graphics::VAO VAO1;
     kdr::Graphics::VBO VBO1 {vertices, sizeof(vertices)};
     kdr::Graphics::EBO EBO1 {indices, sizeof(indices)};
-
-    kdr::Camera camera {
-      CAMERA_FOV,
-      CAMERA_ASPECT,
-      CAMERA_NEAR,
-      CAMERA_FAR
-    };
 };
 
 int main()
 {
   // Initializing GLFW
   kdr::Core::initializeGlfw();
+
+  // Camera
+  kdr::Camera camera {
+    CAMERA_FOV,
+    CAMERA_ASPECT,
+    CAMERA_NEAR,
+    CAMERA_FAR
+  };
 
   // Window
   ExampleWindow window {
@@ -112,6 +110,7 @@ int main()
     WINDOW_TITLE
   };
   window.setClearColor(kdr::Color::Black);
+  window.setBoundCamera(&camera);
 
   // Initializing the Window
   window.initialize();

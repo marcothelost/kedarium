@@ -8,6 +8,7 @@
 
 #include "Core.hpp"
 #include "Color.hpp"
+#include "Camera.hpp"
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 
@@ -88,6 +89,21 @@ namespace kdr
       { return this->deltaTime; }
 
       /**
+       * @brief Sets the ID of the shader bound to the window.
+       * 
+       * @param shaderID The ID of the shader program to bind to the window.
+       */
+      void setBoundShaderID(const GLuint shaderID)
+      { this->boundShaderID = shaderID; }
+      /**
+       * @brief Sets the camera bound to the window.
+       * 
+       * @param camera A pointer to the camera object to bind to the window.
+       */
+      void setBoundCamera(kdr::Camera* camera)
+      { this->boundCamera = camera; }
+
+      /**
        * Sets the clear color for the window.
        * 
        * @param color The color to set as the clear color.
@@ -118,11 +134,14 @@ namespace kdr
       unsigned int height {600};
       std::string  title  {"GLFW"};
 
-      GLFWwindow* glfwWindow {NULL};
+      GLFWwindow*      glfwWindow {NULL};
       kdr::Color::RGBA clearColor {kdr::Color::Black};
 
       float deltaTime {0.f};
-      float lastTime {(float)glfwGetTime()};
+      float lastTime  {(float)glfwGetTime()};
+
+      GLuint       boundShaderID {0};
+      kdr::Camera* boundCamera   {NULL};
 
       /**
        * @brief Initializes the GLFW window.
@@ -136,6 +155,12 @@ namespace kdr
        * This function updates the delta time for the window.
        */
       void _updateDeltaTime();
+      /**
+       * @brief Updates the camera state.
+       * 
+       * This function updates the state of the camera bound to the window.
+       */
+      void _updateCamera();
       /**
        * @brief Updates the window state.
        */
