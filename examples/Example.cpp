@@ -23,6 +23,7 @@ constexpr float CAMERA_FOV    {60.f};
 constexpr float CAMERA_ASPECT {(float)WINDOW_WIDTH / WINDOW_HEIGHT};
 constexpr float CAMERA_NEAR   {0.1f};
 constexpr float CAMERA_FAR    {100.f};
+constexpr float CAMERA_SPEED  {5.f};
 
 // Vertices and Indices
 GLfloat vertices[] = {
@@ -100,7 +101,8 @@ int main()
     CAMERA_FOV,
     CAMERA_ASPECT,
     CAMERA_NEAR,
-    CAMERA_FAR
+    CAMERA_FAR,
+    CAMERA_SPEED
   };
 
   // Window

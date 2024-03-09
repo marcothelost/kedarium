@@ -2,9 +2,11 @@
 #define KDR_CAMERA_HPP
 
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include <string>
 
 #include "Space.hpp"
+#include "Keys.hpp"
 
 namespace kdr
 {
@@ -26,9 +28,10 @@ namespace kdr
        * @param aspect The aspect ratio of the viewport (width / height).
        * @param zNear The near clipping plane.
        * @param zFar The far clipping plane.
+       * @param speed The movement speed of the camera.
        */
-      Camera(const float fov, const float aspect, const float zNear, const float zFar)
-      : fov(fov), aspect(aspect), zNear(zNear), zFar(zFar)
+      Camera(const float fov, const float aspect, const float zNear, const float zFar, const float speed)
+      : fov(fov), aspect(aspect), zNear(zNear), zFar(zFar), speed(speed)
       {}
 
       /**
@@ -59,6 +62,13 @@ namespace kdr
        */
       float getZFar() const
       { return this->zFar; }
+      /**
+       * @brief Gets the movement speed of the camera.
+       * 
+       * @return The movement speed of the camera.
+       */
+      float getSpeed() const
+      { return this->speed; }
 
       /**
        * @brief Sets the field of view angle of the camera.
@@ -88,7 +98,23 @@ namespace kdr
        */
       void setZFar(const float zFar)
       { this->zFar = zFar; }
+      /**
+       * @brief Sets the movement speed of the camera.
+       * 
+       * @param speed The new movement speed of the camera.
+       */
+      void setSpeed(const float speed)
+      { this->speed = speed; }
 
+      /**
+       * @brief Handles camera movement based on user input.
+       * 
+       * This function handles camera movement based on user input, using the specified delta time.
+       * 
+       * @param window A pointer to the GLFW window.
+       * @param deltaTime The time elapsed since the last frame.
+       */
+      void handleMovement(GLFWwindow* window, const float deltaTime);
       /**
        * @brief Updates the camera matrix.
        */
@@ -106,6 +132,7 @@ namespace kdr
       float aspect {1.f};
       float zNear  {0.1f};
       float zFar   {100.f};
+      float speed  {5.f};
 
       kdr::Space::Vec3 position {0.f, 0.f, -3.f};
       kdr::Space::Mat4 matrix  {1.f};

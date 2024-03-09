@@ -54,6 +54,7 @@ void kdr::Window::_updateCamera()
   if (this->boundShaderID == 0 || this->boundCamera == NULL) {
     return;
   }
+  this->boundCamera->handleMovement(this->glfwWindow, this->deltaTime);
   this->boundCamera->updateMatrix();
   this->boundCamera->applyMatrix(this->boundShaderID, "cameraMatrix");
 }

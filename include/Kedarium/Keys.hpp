@@ -12,6 +12,10 @@ namespace kdr
   {
     W = GLFW_KEY_W,
     S = GLFW_KEY_S,
+    A = GLFW_KEY_A,
+    D = GLFW_KEY_D,
+    Spacebar = GLFW_KEY_SPACE,
+    LeftShift = GLFW_KEY_LEFT_SHIFT,
  };
 
   /**
