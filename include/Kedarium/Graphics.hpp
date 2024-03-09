@@ -29,6 +29,14 @@ namespace kdr
         Shader(const std::string& vertexPath, const std::string& fragmentPath);
 
         /**
+         * @brief Gets the ID of the shader program.
+         * 
+         * @return The ID of the shader program.
+         */
+        GLuint getID() const
+        { return this->ID; }
+
+        /**
          * @brief Activates the shader program for use.
          */
         void Use() const
@@ -56,6 +64,14 @@ namespace kdr
          * @param size The size of the vertex data array in bytes.
          */
         VBO(GLfloat vertices[], GLsizeiptr size);
+
+        /**
+         * @brief Gets the ID of the vertex buffer object.
+         * 
+         * @return The ID of the vertex buffer object.
+         */
+        GLuint getID() const
+        { return this->ID; }
 
         /**
          * @brief Binds the VBO for use.
@@ -92,6 +108,14 @@ namespace kdr
         EBO(GLuint indices[], GLsizeiptr size);
 
         /**
+         * @brief Gets the ID of the element buffer object.
+         * 
+         * @return The ID of the element buffer object.
+         */
+        GLuint getID() const
+        { return this->ID; }
+
+        /**
          * @brief Binds the EBO for use.
          */
         void Bind() const
@@ -124,6 +148,14 @@ namespace kdr
          */
         VAO()
         { glGenVertexArrays(1, &this->ID); }
+
+         /**
+         * @brief Gets the ID of the vertex array object.
+         * 
+         * @return The ID of the vertex array object.
+         */
+        GLuint getID() const
+        { return this->ID; }
 
         /**
          * @brief Binds the VAO for use.

@@ -66,6 +66,22 @@ class ExampleWindow : public kdr::Window
     {
       this->defaultShader.Use();
       this->VAO1.Bind();
+
+      kdr::Space::Mat4 model      {1.f};
+      kdr::Space::Mat4 view       {1.f};
+      kdr::Space::Mat4 projection {1.f};
+
+      view = kdr::Space::translate(view, {0.f, 0.f, -3.f});
+      projection = kdr::Space::perspective(60.f, (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.f);
+
+      GLuint modelLoc = glGetUniformLocation(defaultShader.getID(), "model");
+      GLuint viewLoc = glGetUniformLocation(defaultShader.getID(), "view");
+      GLuint projLoc = glGetUniformLocation(defaultShader.getID(), "proj");
+
+      glUniformMatrix4fv(modelLoc, 1, GL_FALSE, kdr::Space::valuePointer(model));
+      glUniformMatrix4fv(viewLoc, 1, GL_FALSE, kdr::Space::valuePointer(view));
+      glUniformMatrix4fv(projLoc, 1, GL_FALSE, kdr::Space::valuePointer(projection));
+
       glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
     }
 
@@ -104,10 +120,6 @@ int main()
   kdr::Core::printEngineInfo();
   std::cout << '\n';
   kdr::Core::printVersionInfo();
-
-  kdr::Space::Vec3 vecOne {-2.f, 3.f, 0.f};
-  kdr::Space::Vec3 vecTwo {4.f, -1.f, 3.f};
-  std::cout << kdr::Space::dot(vecOne, vecTwo) << '\n';
 
   // Main Loop
   window.loop();

@@ -1,6 +1,8 @@
 #ifndef KDR_SPACE_HPP
 #define KDR_SPACE_HPP
 
+#include <cmath>
+
 namespace kdr
 {
   /**
@@ -8,6 +10,22 @@ namespace kdr
    */
   namespace Space
   {
+    /**
+     * @brief Constant representing the value of Pi.
+     */
+    inline const float PI = 3.141593f;
+
+    /**
+     * @brief Converts degrees to radians.
+     * 
+     * @param degrees The angle in degrees.
+     * @return The angle in radians.
+     */
+    inline float radians(const float degrees)
+    {
+      return degrees * (kdr::Space::PI / 180.f);
+    }
+
     /**
      * @brief Class representing a 3D vector.
      */
@@ -113,7 +131,7 @@ namespace kdr
      * @param vecTwo The second vector.
      * @return The dot product of the two vectors.
      */
-    float dot(const kdr::Space::Vec3& vecOne, const kdr::Space::Vec3& vecTwo)
+    inline float dot(const kdr::Space::Vec3& vecOne, const kdr::Space::Vec3& vecTwo)
     {
       return vecOne.x * vecTwo.x + vecOne.y * vecTwo.y + vecOne.z * vecTwo.z;
     }
@@ -124,7 +142,7 @@ namespace kdr
      * @param vecTwo The second vector.
      * @return The cross product of the two vectors.
      */
-    kdr::Space::Vec3 cross(const kdr::Space::Vec3& vecOne, const kdr::Space::Vec3& vecTwo)
+    inline kdr::Space::Vec3 cross(const kdr::Space::Vec3& vecOne, const kdr::Space::Vec3& vecTwo)
     {
       return kdr::Space::Vec3 {
         vecOne.y * vecTwo.z - vecOne.z * vecTwo.y,
@@ -190,6 +208,45 @@ namespace kdr
       private:
         float elements[4][4];
     };
+
+    /**
+     * @brief Applies translation to a 4x4 matrix.
+     * 
+     * This function translates the given matrix by the specified vector.
+     * 
+     * @param mat The matrix to translate.
+     * @param vec The translation vector.
+     * @return The translated matrix.
+     */
+    inline kdr::Space::Mat4 translate(const kdr::Space::Mat4& mat, const kdr::Space::Vec3& vec)
+    {
+      kdr::Space::Mat4 result {mat};
+      result[3][0] += vec.x;
+      result[3][1] += vec.y;
+      result[3][2] += vec.z;
+      return result;
+    }
+    /**
+     * @brief Creates a perspective projection matrix.
+     * 
+     * @param fov The field of view angle in degrees.
+     * @param aspect The aspect ratio of the projection (width / height).
+     * @param zNear The near clipping plane.
+     * @param zFar The far clipping plane.
+     * @return The perspective projection matrix.
+     */
+    kdr::Space::Mat4 perspective(const float fov, const float aspect, const float zNear, const float zFar);    
+
+    /**
+     * @brief Returns a pointer to the underlying array storing the elements of a 4x4 matrix.
+     * 
+     * @param mat The matrix.
+     * @return A pointer to the first element of the matrix.
+     */
+    inline const float* valuePointer(const kdr::Space::Mat4& mat)
+    {
+      return &mat[0][0];
+    }
   }
 }
 
