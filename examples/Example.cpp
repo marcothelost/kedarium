@@ -8,6 +8,8 @@
 #include "Kedarium/Color.hpp"
 #include "Kedarium/Graphics.hpp"
 #include "Kedarium/Window.hpp"
+#include "Kedarium/Space.hpp"
+#include "Kedarium/Debug.hpp"
 
 // Constants
 const unsigned int WINDOW_WIDTH  {800};
@@ -102,6 +104,10 @@ int main()
   kdr::Core::printEngineInfo();
   std::cout << '\n';
   kdr::Core::printVersionInfo();
+
+  kdr::Space::Vec3 vecOne {-2.f, 3.f, 0.f};
+  kdr::Space::Vec3 vecTwo {4.f, -1.f, 3.f};
+  std::cout << kdr::Space::dot(vecOne, vecTwo) << '\n';
 
   // Main Loop
   window.loop();
