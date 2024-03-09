@@ -50,6 +50,13 @@ namespace kdr
       { glfwSetWindowShouldClose(this->glfwWindow, GLFW_TRUE); }
 
       /**
+       * @brief Gets the GLFW window associated with this object.
+       * 
+       * @return A pointer to the GLFW window.
+       */
+      GLFWwindow* getGlfwWindow() const
+      { return this->glfwWindow; }
+      /**
        * @brief Gets the width of the window.
        *
        * @return The width of the window.

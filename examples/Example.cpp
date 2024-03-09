@@ -9,6 +9,7 @@
 #include "Kedarium/Graphics.hpp"
 #include "Kedarium/Window.hpp"
 #include "Kedarium/Space.hpp"
+#include "Kedarium/Keys.hpp"
 #include "Kedarium/Debug.hpp"
 
 // Constants
@@ -60,7 +61,16 @@ class ExampleWindow : public kdr::Window
 
   protected:
     void update()
-    {}
+    {
+      if (kdr::Keys::isPressed(this->getGlfwWindow(), kdr::Key::W))
+      {
+        this->z += 5.f * this->getDeltaTime();
+      }
+      else if (kdr::Keys::isPressed(this->getGlfwWindow(), kdr::Key::S))
+      {
+        this->z -= 5.f * this->getDeltaTime();
+      }
+    }
 
     void render()
     {
@@ -71,7 +81,7 @@ class ExampleWindow : public kdr::Window
       kdr::Space::Mat4 view       {1.f};
       kdr::Space::Mat4 projection {1.f};
 
-      view = kdr::Space::translate(view, {0.f, 0.f, -3.f});
+      view = kdr::Space::translate(view, {0.f, 0.f, this->z});
       projection = kdr::Space::perspective(60.f, (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.f);
 
       GLuint modelLoc = glGetUniformLocation(defaultShader.getID(), "model");
@@ -95,6 +105,8 @@ class ExampleWindow : public kdr::Window
     kdr::Graphics::VAO VAO1;
     kdr::Graphics::VBO VBO1 {vertices, sizeof(vertices)};
     kdr::Graphics::EBO EBO1 {indices, sizeof(indices)};
+
+    float z {-3.f};
 };
 
 int main()
