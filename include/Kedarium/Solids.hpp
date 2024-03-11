@@ -78,9 +78,44 @@ namespace kdr
         kdr::Graphics::VBO* VBO {NULL};
         kdr::Graphics::EBO* EBO {NULL};
 
+        /**
+         * @brief Initializes the member objects of the solid with provided vertex and index data.
+         * 
+         * This function initializes the vertex array object (VAO), vertex buffer object (VBO), and element buffer object (EBO)
+         * with the provided vertex and index data.
+         * 
+         * @param vertices An array containing the vertex data.
+         * @param verticesSize The size of the vertex data array in bytes.
+         * @param indices An array containing the index data.
+         * @param indicesSize The size of the index data array in bytes.
+         */
+        void initializeMembers(GLfloat* vertices, GLsizeiptr verticesSize, GLuint* indices, GLsizeiptr indicesSize);
+
       private:
         kdr::Space::Vec3 position {0.f};
         kdr::Space::Mat4 model    {1.f};
+    };
+
+    /**
+     * @brief Represents a 3D cube.
+     */
+    class Cube : public kdr::Solids::Solid
+    {
+      public:
+        /**
+         * @brief Constructs a Cube object with the specified position and edge length.
+         * 
+         * @param position The position of the cube.
+         * @param edgeLength The length of each edge of the cube.
+         */
+        Cube(const kdr::Space::Vec3& position, const float edgeLength);
+
+        /**
+         * @brief Renders the cube.
+         * 
+         * This function renders the cube using OpenGL.
+         */
+        void render();
     };
   }
 }

@@ -12,6 +12,7 @@
 #include "Kedarium/Keys.hpp"
 #include "Kedarium/Camera.hpp"
 #include "Kedarium/Debug.hpp"
+#include "Kedarium/Solids.hpp"
 
 // Window Settings
 constexpr unsigned int WINDOW_WIDTH  {800};
@@ -48,25 +49,11 @@ class ExampleWindow : public kdr::Window
 
     ~ExampleWindow()
     {
-      this->VAO1.Delete();
-      this->VBO1.Delete();
-      this->EBO1.Delete();
       this->defaultShader.Delete();
     }
 
     void initialize()
-    {
-      this->VAO1.Bind();
-      this->VBO1.Bind();
-      this->EBO1.Bind();
-
-      this->VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(GLfloat), (void*)0);
-      this->VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-
-      this->VAO1.Unbind();
-      this->VBO1.Unbind();
-      this->EBO1.Unbind();
-    }
+    {}
 
   protected:
     void update()
@@ -94,8 +81,7 @@ class ExampleWindow : public kdr::Window
     {
       this->defaultShader.Use();
       this->setBoundShaderID(this->defaultShader.getID());
-      this->VAO1.Bind();
-      glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
+      this->cube.render();
     }
 
   private:
@@ -104,10 +90,10 @@ class ExampleWindow : public kdr::Window
       "assets/Shaders/default.vert",
       "assets/Shaders/default.frag"
     };
-
-    kdr::Graphics::VAO VAO1;
-    kdr::Graphics::VBO VBO1 {vertices, sizeof(vertices)};
-    kdr::Graphics::EBO EBO1 {indices, sizeof(indices)};
+    kdr::Solids::Cube cube {
+      {0.f, 0.f, 0.f},
+      1.f
+    };
 };
 
 int main()
