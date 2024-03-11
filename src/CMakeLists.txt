@@ -3,6 +3,7 @@ add_library(
   Kedarium
   Core.cpp
   File.cpp
+  Image.cpp
   Graphics.cpp
   Window.cpp
   Space.cpp
