@@ -88,6 +88,20 @@ namespace kdr
        */
       float getDeltaTime() const
       { return this->deltaTime; }
+      /**
+       * @brief Gets the ID of the shader bound to the window.
+       *
+       * @return The ID of the bound shader.
+       */
+      GLuint getBoundShaderID() const
+      { return this->boundShaderID; }
+      /**
+       * @brief Gets the camera bound to the window.
+       *
+       * @return A pointer to the bound camera.
+       */
+      kdr::Camera* getBoundCamera() const
+      { return this->boundCamera; }
 
       /**
        * @brief Sets the ID of the shader bound to the window.

@@ -29,9 +29,10 @@ namespace kdr
        * @param zNear The near clipping plane.
        * @param zFar The far clipping plane.
        * @param speed The movement speed of the camera.
+       * @param sensitivity The mouse sensitivity of the camera.
        */
-      Camera(const float fov, const float aspect, const float zNear, const float zFar, const float speed)
-      : fov(fov), aspect(aspect), zNear(zNear), zFar(zFar), speed(speed)
+      Camera(const float fov, const float aspect, const float zNear, const float zFar, const float speed, const float sensitivity)
+      : fov(fov), aspect(aspect), zNear(zNear), zFar(zFar), speed(speed), sensitivity(sensitivity)
       {}
 
       /**
@@ -69,6 +70,13 @@ namespace kdr
        */
       float getSpeed() const
       { return this->speed; }
+      /**
+       * @brief Gets the mouse sensitivity of the camera.
+       * 
+       * @return The mouse sensitivity of the camera.
+       */
+      float getSensitivity() const
+      { return this->sensitivity; }
       /**
        * @brief Checks if the camera movement is locked.
        * 
@@ -113,6 +121,13 @@ namespace kdr
       void setSpeed(const float speed)
       { this->speed = speed; }
       /**
+       * @brief Sets the mouse sensitivity of the camera.
+       * 
+       * @param sensitivity The new mouse sensitivity of the camera.
+       */
+      void setSensitivity(const float sensitivity)
+      { this->sensitivity = sensitivity; }
+      /**
        * @brief Sets whether the camera movement is locked.
        * 
        * @param locked True to lock camera movement, false otherwise.
@@ -150,11 +165,12 @@ namespace kdr
       void applyMatrix(const GLuint shaderID, const std::string& uniformName);
 
     private:
-      float fov    {60.f};
-      float aspect {1.f};
-      float zNear  {0.1f};
-      float zFar   {100.f};
-      float speed  {5.f};
+      float fov         {60.f};
+      float aspect      {1.f};
+      float zNear       {0.1f};
+      float zFar        {100.f};
+      float speed       {5.f};
+      float sensitivity {10.f};
 
       kdr::Space::Vec3 position {0.f, 0.f, -3.f};
       kdr::Space::Mat4 matrix  {1.f};

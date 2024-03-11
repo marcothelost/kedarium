@@ -15,6 +15,22 @@ namespace kdr
   namespace Graphics
   {
     /**
+     * @brief Sets the OpenGL rendering mode to point mode.
+     */
+    inline void usePointMode()
+    { glPolygonMode(GL_FRONT_AND_BACK, GL_POINT); }
+    /**
+     * @brief Sets the OpenGL rendering mode to line mode.
+     */
+    inline void useLineMode()
+    { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); }
+    /**
+     * @brief Sets the OpenGL rendering mode to fill mode.
+     */
+    inline void useFillMode()
+    { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
+
+    /**
      * @brief Class representing a shader program.
      */
     class Shader

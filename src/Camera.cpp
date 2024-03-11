@@ -3,7 +3,8 @@
 
 void kdr::Camera::handleMouse(GLFWwindow* window)
 {
-  if (!this->locked) {
+  if (!this->locked)
+  {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     return;
   }
@@ -25,7 +26,8 @@ void kdr::Camera::handleMouse(GLFWwindow* window)
 
 void kdr::Camera::handleKeyboard(GLFWwindow* window, const float deltaTime)
 {
-  if (!this->locked) {
+  if (!this->locked)
+  {
     return;
   }
 

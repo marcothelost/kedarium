@@ -19,11 +19,12 @@ constexpr unsigned int WINDOW_HEIGHT {600};
 const     std::string  WINDOW_TITLE  {"GLFW"};
 
 // Camera Settings
-constexpr float CAMERA_FOV    {60.f};
-constexpr float CAMERA_ASPECT {(float)WINDOW_WIDTH / WINDOW_HEIGHT};
-constexpr float CAMERA_NEAR   {0.1f};
-constexpr float CAMERA_FAR    {100.f};
-constexpr float CAMERA_SPEED  {5.f};
+constexpr float CAMERA_FOV         {60.f};
+constexpr float CAMERA_ASPECT      {(float)WINDOW_WIDTH / WINDOW_HEIGHT};
+constexpr float CAMERA_NEAR        {0.1f};
+constexpr float CAMERA_FAR         {100.f};
+constexpr float CAMERA_SPEED       {3.f};
+constexpr float CAMERA_SENSITIVITY {10.f};
 
 // Vertices and Indices
 GLfloat vertices[] = {
@@ -69,7 +70,25 @@ class ExampleWindow : public kdr::Window
 
   protected:
     void update()
-    {}
+    {
+      if (this->getBoundCamera() == NULL || !this->getBoundCamera()->getLocked())
+      {
+        return;
+      }
+
+      if (kdr::Keys::isPressed(this->getGlfwWindow(), kdr::Key::C))
+      {
+        kdr::Graphics::usePointMode();
+      }
+      else if (kdr::Keys::isPressed(this->getGlfwWindow(), kdr::Key::V))
+      {
+        kdr::Graphics::useLineMode();
+      }
+      else if (kdr::Keys::isPressed(this->getGlfwWindow(), kdr::Key::B))
+      {
+        kdr::Graphics::useFillMode();
+      }
+    }
 
     void render()
     {
@@ -102,7 +121,8 @@ int main()
     CAMERA_ASPECT,
     CAMERA_NEAR,
     CAMERA_FAR,
-    CAMERA_SPEED
+    CAMERA_SPEED,
+    CAMERA_SENSITIVITY
   };
 
   // Window
