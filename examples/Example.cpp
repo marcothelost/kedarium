@@ -81,7 +81,7 @@ class ExampleWindow : public kdr::Window
     {
       this->defaultShader.Use();
       this->setBoundShaderID(this->defaultShader.getID());
-      this->cube.render();
+      this->cuboid.render();
     }
 
   private:
@@ -90,8 +90,10 @@ class ExampleWindow : public kdr::Window
       "assets/Shaders/default.vert",
       "assets/Shaders/default.frag"
     };
-    kdr::Solids::Cube cube {
+    kdr::Solids::Cuboid cuboid {
       {0.f, 0.f, 0.f},
+      2.f,
+      1.f,
       1.f
     };
 };

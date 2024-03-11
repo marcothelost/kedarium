@@ -70,3 +70,41 @@ void kdr::Solids::Cube::render()
   glDrawElements(GL_TRIANGLES, sizeof(cuboidIndices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
   this->VAO->Unbind();
 }
+
+kdr::Solids::Cuboid::Cuboid(const kdr::Space::Vec3& position, const float length, const float height, const float width) : kdr::Solids::Solid(position)
+{
+  GLfloat cubeVertices[] = {
+    -(length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, // 0  000 Front
+    -(length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, // 1  000 Left
+    -(length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, // 2  000 Bottom
+     (length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, // 3  100 Front
+     (length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, // 4  100 Right
+     (length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, // 5  100 Bottom
+    -(length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, // 6  010 Front
+    -(length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, // 7  010 Left
+    -(length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, // 8  010 Top
+     (length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, // 9  110 Front
+     (length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, // 10 110 Right
+     (length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, // 11 110 Top
+    -(length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, // 12 001 Back
+    -(length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, // 13 001 Left
+    -(length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, // 14 001 Bottom
+     (length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, // 15 101 Back
+     (length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, // 16 101 Right
+     (length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, // 17 101 Bottom
+    -(length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, // 18 011 Back
+    -(length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, // 19 011 Left
+    -(length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, // 20 011 Top
+     (length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, // 21 111 Back
+     (length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, // 22 111 Right
+     (length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, // 23 111 Top
+  };
+  this->initializeMembers(cubeVertices, sizeof(cubeVertices), cuboidIndices, sizeof(cuboidIndices));
+}
+
+void kdr::Solids::Cuboid::render()
+{
+  this->VAO->Bind();
+  glDrawElements(GL_TRIANGLES, sizeof(cuboidIndices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
+  this->VAO->Unbind();
+}

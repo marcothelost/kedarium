@@ -112,8 +112,28 @@ namespace kdr
 
         /**
          * @brief Renders the cube.
+         */
+        void render();
+    };
+
+    /**
+     * @brief Represents a 3D cuboid.
+     */
+    class Cuboid : public kdr::Solids::Solid
+    {
+      public:
+        /**
+         * @brief Constructs a Cuboid object with the specified position and dimensions.
          * 
-         * This function renders the cube using OpenGL.
+         * @param position The position of the cuboid.
+         * @param length The length of the cuboid along the x-axis.
+         * @param height The height of the cuboid along the y-axis.
+         * @param width The width of the cuboid along the z-axis.
+         */
+        Cuboid(const kdr::Space::Vec3& position, const float length, const float height, const float width);
+
+        /**
+         * @brief Renders the cuboid.
          */
         void render();
     };
