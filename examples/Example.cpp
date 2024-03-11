@@ -80,15 +80,22 @@ class ExampleWindow : public kdr::Window
     void render()
     {
       this->defaultShader.Use();
+      testTexture.TextureUnit(this->defaultShader.getID(), "tex0", 0);
+      testTexture.Bind();
       this->setBoundShaderID(this->defaultShader.getID());
       this->cuboid.render();
     }
 
   private:
-    kdr::Graphics::Shader defaultShader
-    {
+    kdr::Graphics::Shader defaultShader {
       "assets/Shaders/default.vert",
       "assets/Shaders/default.frag"
+    };
+    kdr::Graphics::Texture testTexture {
+      "assets/Textures/test.png",
+      GL_TEXTURE_2D,
+      GL_TEXTURE0,
+      GL_UNSIGNED_BYTE
     };
     kdr::Solids::Cuboid cuboid {
       {0.f, 0.f, 0.f},

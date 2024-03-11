@@ -1,6 +1,6 @@
 #include "Kedarium/Image.hpp"
 
-bool kdr::Image::loadFromPNG(const std::string& path, char** data, int& oWidth, int& oHeight)
+bool kdr::Image::loadFromPNG(const std::string& path, GLubyte** oData, int& oWidth, int& oHeight, bool& oHasAlpha)
 {
   png_structp  pngPtr;
   png_infop    infoPtr;
@@ -50,14 +50,15 @@ bool kdr::Image::loadFromPNG(const std::string& path, char** data, int& oWidth, 
   png_get_IHDR(pngPtr, infoPtr, &width, &height, &bitDepth, &colorType, &interlaceType, NULL, NULL);
   oWidth = width;
   oHeight = height;
+  oHasAlpha = (colorType & PNG_COLOR_MASK_ALPHA);
 
   unsigned int rowBytes = png_get_rowbytes(pngPtr, infoPtr);
-  *data = (char*)malloc(rowBytes * oHeight);
+  *oData = reinterpret_cast<unsigned char*>(malloc(rowBytes * oHeight));
 
   png_bytepp rowPointers = png_get_rows(pngPtr, infoPtr);
   for (int i = 0; i < oHeight; i++)
   {
-    memcpy(*data + (rowBytes * (oHeight - i - 1)), rowPointers[i], rowBytes);
+    memcpy(*oData + (rowBytes * (oHeight - i - 1)), rowPointers[i], rowBytes);
   }
 
   png_destroy_read_struct(&pngPtr, &infoPtr, NULL);

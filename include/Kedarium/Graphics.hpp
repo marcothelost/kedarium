@@ -6,6 +6,7 @@
 #include <string>
 
 #include "File.hpp"
+#include "Image.hpp"
 
 namespace kdr
 {
@@ -202,6 +203,55 @@ namespace kdr
 
       private:
         GLuint ID;
+    };
+
+    /**
+     * @brief Represents a texture in OpenGL.
+     */
+    class Texture
+    {
+      public:
+        /**
+         * @brief Constructs a Texture object from a PNG file.
+         * 
+         * @param pngPath The file path to the PNG texture.
+         * @param type The type of the texture.
+         * @param slot The texture slot.
+         * @param pixelType The pixel type of the texture.
+         */
+        Texture(const std::string& pngPath, GLenum type, GLenum slot, GLenum pixelType);
+
+        /**
+         * @brief Binds the texture.
+         */
+        void Bind() const
+        { glBindTexture(this->type, this->ID); }
+        /**
+         * @brief Unbinds the texture.
+         */
+        void Unbind() const
+        { glBindTexture(this->type, 0); }
+        /**
+         * @brief Deletes the texture.
+         */
+        void Delete() const
+        { glDeleteTextures(1, &this->ID); }
+        /**
+         * @brief Sets the texture unit in the shader.
+         * 
+         * @param shaderID The ID of the shader program.
+         * @param uniform The name of the uniform variable in the shader.
+         * @param unit The texture unit to set.
+         */
+        void TextureUnit(const GLuint shaderID, const std::string& uniform, GLuint unit) const
+        {
+          GLuint textureUnitLoc = glGetUniformLocation(shaderID, uniform.c_str());
+          glUniform1i(textureUnitLoc, unit);
+        }
+
+      private:
+        GLuint ID;
+        GLenum type;
     };
   }
 }
