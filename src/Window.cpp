@@ -15,7 +15,7 @@ void kdr::Window::loop()
   }
 }
 
-bool kdr::Window::_initialize()
+bool kdr::Window::_initializeWindow()
 {
   this->glfwWindow = glfwCreateWindow(
     this->width,
@@ -38,7 +38,23 @@ bool kdr::Window::_initialize()
     this->clearColor.blue,
     this->clearColor.alpha
   );
+  return true;
+}
+
+bool kdr::Window::_initializeOpenGLSettings()
+{
+  glPointSize(5.f);
+  glLineWidth(2.f);
+
+  return true;
+}
+
+bool kdr::Window::_initialize()
+{
+  if (!this->_initializeWindow()) return false;
   if (!kdr::Core::initializeGlew()) return false;
+  if (!this->_initializeOpenGLSettings()) return false;
+
   return true;
 }
 

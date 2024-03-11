@@ -161,8 +161,26 @@ namespace kdr
       kdr::Key     cameraUnbindKey {kdr::Key::Escape};
 
       /**
-       * @brief Initializes the GLFW window.
-       *
+       * @brief Initializes the window.
+       * 
+       * This function initializes the GLFW window and OpenGL settings.
+       * 
+       * @return True if initialization is successful, false otherwise.
+       */
+      bool _initializeWindow();
+      /**
+       * @brief Initializes OpenGL settings.
+       * 
+       * This function initializes OpenGL settings.
+       * 
+       * @return True if initialization is successful, false otherwise.
+       */
+      bool _initializeOpenGLSettings();
+      /**
+       * @brief Initializes the window and OpenGL settings.
+       * 
+       * This function initializes both the GLFW window and OpenGL settings.
+       * 
        * @return True if initialization is successful, false otherwise.
        */
       bool _initialize();

@@ -119,11 +119,55 @@ namespace kdr
           );
         }
 
+        /**
+         * @brief Adds the components of the given vector to this vector.
+         * 
+         * @param vec The vector to add.
+         * @return The resulting vector after addition.
+         */
+        kdr::Space::Vec3 operator+=(const kdr::Space::Vec3& vec)
+        {
+          this->x += vec.x;
+          this->y += vec.y;
+          this->z += vec.z;
+          return *this;
+        }
+        /**
+         * @brief Subtracts the components of the given vector from this vector.
+         * 
+         * @param vec The vector to subtract.
+         * @return The resulting vector after subtraction.
+         */
+        kdr::Space::Vec3 operator-=(const kdr::Space::Vec3& vec)
+        {
+          this->x -= vec.x;
+          this->y -= vec.y;
+          this->z -= vec.z;
+          return *this;
+        }
+
         float x {0.f};
         float y {0.f};
         float z {0.f};
     };
 
+    /**
+     * @brief Normalizes the given vector.
+     * 
+     * @param vec The vector to normalize.
+     * @return The normalized vector.
+     */
+    inline kdr::Space::Vec3 normalize(const kdr::Space::Vec3& vec)
+    {
+      const float length = sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+      if (length == 0.f) return kdr::Space::Vec3 {0.f};
+
+      return kdr::Space::Vec3 {
+        vec.x / length,
+        vec.y / length,
+        vec.z / length
+      };
+    }
     /**
      * @brief Computes the dot product of two 3D vectors.
      * 
@@ -254,7 +298,16 @@ namespace kdr
      * @param zFar The far clipping plane.
      * @return The perspective projection matrix.
      */
-    kdr::Space::Mat4 perspective(const float fov, const float aspect, const float zNear, const float zFar);    
+    kdr::Space::Mat4 perspective(const float fov, const float aspect, const float zNear, const float zFar);
+    /**
+     * @brief Creates a view matrix for a camera positioned at the given eye point, looking towards the target point, with the given up direction.
+     * 
+     * @param eye The position of the camera.
+     * @param target The point the camera is looking at.
+     * @param up The up direction of the camera.
+     * @return The view matrix.
+     */
+    kdr::Space::Mat4 lookAt(const kdr::Space::Vec3& eye, const kdr::Space::Vec3& target, const kdr::Space::Vec3& up);
 
     /**
      * @brief Returns a pointer to the underlying array storing the elements of a 4x4 matrix.
