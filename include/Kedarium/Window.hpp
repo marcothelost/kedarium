@@ -117,7 +117,6 @@ namespace kdr
        */
       void setBoundCamera(kdr::Camera* camera)
       { this->boundCamera = camera; }
-
       /**
        * Sets the clear color for the window.
        * 
@@ -133,6 +132,15 @@ namespace kdr
           color.alpha
         );
       }
+
+      /**
+       * @brief Maximizes the window.
+       */
+      void maximize();
+      /**
+       * @brief Unmaximizes the window.
+       */
+      void unmaximize();
 
     protected:
       /**
@@ -159,6 +167,10 @@ namespace kdr
       kdr::Camera* boundCamera     {NULL};
       kdr::Key     cameraBindKey   {kdr::Key::E};
       kdr::Key     cameraUnbindKey {kdr::Key::Escape};
+
+      kdr::Key fullscreenKey     {kdr::Key::F};
+      bool     fullscreenEnabled {false};
+      bool     canUseFullscreen  {true};
 
       /**
        * @brief Initializes the window.

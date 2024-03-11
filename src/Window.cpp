@@ -2,8 +2,18 @@
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
-  (void)window;
-  glViewport(0, 0, width, height);
+  kdr::Window* windowInstance = (kdr::Window*)glfwGetWindowUserPointer(window);
+
+  if (windowInstance->getBoundCamera() != NULL)
+  {
+    windowInstance->getBoundCamera()->setAspect((float)width / height);
+  }
+  glViewport(
+    0,
+    0,
+    width,
+    height
+  );
 }
 
 void kdr::Window::loop()
@@ -13,6 +23,38 @@ void kdr::Window::loop()
     this->_update();
     this->_render();
   }
+}
+
+void kdr::Window::maximize()
+{
+  GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+  const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+  glfwSetWindowMonitor(
+    this->glfwWindow,
+    monitor,
+    0,
+    0,
+    mode->width,
+    mode->height,
+    mode->refreshRate
+  );
+  this->fullscreenEnabled = true;
+}
+
+void kdr::Window::unmaximize()
+{
+  GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+  const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+  glfwSetWindowMonitor(
+    this->glfwWindow,
+    NULL,
+    mode->width / 2 - 400,
+    mode->height / 2 - 300,
+    800,
+    600,
+    GLFW_DONT_CARE
+  );
+  this->fullscreenEnabled = false;
 }
 
 bool kdr::Window::_initializeWindow()
@@ -38,6 +80,7 @@ bool kdr::Window::_initializeWindow()
     this->clearColor.blue,
     this->clearColor.alpha
   );
+  glfwSetWindowUserPointer(this->glfwWindow, this);
   return true;
 }
 
@@ -78,6 +121,22 @@ void kdr::Window::_updateCamera()
   else if (kdr::Keys::isPressed(this->glfwWindow, this->cameraUnbindKey))
   {
     this->boundCamera->setLocked(false);
+  }
+
+  if (kdr::Keys::isPressed(this->glfwWindow, this->fullscreenKey))
+  {
+    if (!this->canUseFullscreen)
+    {
+      return;
+    }
+    this->fullscreenEnabled
+      ? this->unmaximize()
+      : this->maximize();
+    this->canUseFullscreen = false;
+  }
+  else
+  {
+    this->canUseFullscreen = true;
   }
 
   this->boundCamera->handleMouse(this->glfwWindow);
