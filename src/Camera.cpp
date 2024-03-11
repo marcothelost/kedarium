@@ -1,7 +1,34 @@
 #include "Kedarium/Camera.hpp"
+#include <iostream>
 
-void kdr::Camera::handleMovement(GLFWwindow* window, const float deltaTime)
+void kdr::Camera::handleMouse(GLFWwindow* window)
 {
+  if (!this->locked) {
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    return;
+  }
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+  double mouseX;
+  double mouseY;
+  glfwGetCursorPos(window, &mouseX, &mouseY);
+
+  int windowWidth;
+  int windowHeight;
+  glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
+
+  const float deltaX = (float)(mouseX - ((float)windowWidth / 2.f));
+  const float deltaY = (float)(mouseY - ((float)windowHeight / 2.f));
+
+  glfwSetCursorPos(window, (double)windowWidth / 2.f, (double)windowHeight / 2.f);
+}
+
+void kdr::Camera::handleKeyboard(GLFWwindow* window, const float deltaTime)
+{
+  if (!this->locked) {
+    return;
+  }
+
   if (kdr::Keys::isPressed(window, kdr::Key::W))
   {
     this->position.z += this->speed * deltaTime;

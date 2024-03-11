@@ -69,6 +69,13 @@ namespace kdr
        */
       float getSpeed() const
       { return this->speed; }
+      /**
+       * @brief Checks if the camera movement is locked.
+       * 
+       * @return True if camera movement is locked, false otherwise.
+       */
+      bool getLocked() const
+      { return this->locked; }
 
       /**
        * @brief Sets the field of view angle of the camera.
@@ -105,16 +112,31 @@ namespace kdr
        */
       void setSpeed(const float speed)
       { this->speed = speed; }
+      /**
+       * @brief Sets whether the camera movement is locked.
+       * 
+       * @param locked True to lock camera movement, false otherwise.
+       */
+      void setLocked(const bool locked)
+      { this->locked = locked; }
 
       /**
-       * @brief Handles camera movement based on user input.
+       * @brief Handles keyboard input for camera movement.
        * 
-       * This function handles camera movement based on user input, using the specified delta time.
+       * This function handles keyboard input for camera movement, using the specified delta time.
        * 
        * @param window A pointer to the GLFW window.
        * @param deltaTime The time elapsed since the last frame.
        */
-      void handleMovement(GLFWwindow* window, const float deltaTime);
+      void handleKeyboard(GLFWwindow* window, const float deltaTime);
+      /**
+       * @brief Handles mouse input for camera rotation.
+       * 
+       * This function handles mouse input for camera rotation.
+       * 
+       * @param window A pointer to the GLFW window.
+       */
+      void handleMouse(GLFWwindow* window);
       /**
        * @brief Updates the camera matrix.
        */
@@ -136,6 +158,8 @@ namespace kdr
 
       kdr::Space::Vec3 position {0.f, 0.f, -3.f};
       kdr::Space::Mat4 matrix  {1.f};
+
+      bool locked {false};
   };
 }
 

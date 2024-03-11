@@ -54,7 +54,18 @@ void kdr::Window::_updateCamera()
   if (this->boundShaderID == 0 || this->boundCamera == NULL) {
     return;
   }
-  this->boundCamera->handleMovement(this->glfwWindow, this->deltaTime);
+
+  if (kdr::Keys::isPressed(this->glfwWindow, this->cameraBindKey))
+  {
+    this->boundCamera->setLocked(true);
+  }
+  else if (kdr::Keys::isPressed(this->glfwWindow, this->cameraUnbindKey))
+  {
+    this->boundCamera->setLocked(false);
+  }
+
+  this->boundCamera->handleMouse(this->glfwWindow);
+  this->boundCamera->handleKeyboard(this->glfwWindow, this->deltaTime);
   this->boundCamera->updateMatrix();
   this->boundCamera->applyMatrix(this->boundShaderID, "cameraMatrix");
 }

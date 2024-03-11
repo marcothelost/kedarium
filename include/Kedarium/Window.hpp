@@ -8,6 +8,7 @@
 
 #include "Core.hpp"
 #include "Color.hpp"
+#include "Keys.hpp"
 #include "Camera.hpp"
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
@@ -140,8 +141,10 @@ namespace kdr
       float deltaTime {0.f};
       float lastTime  {(float)glfwGetTime()};
 
-      GLuint       boundShaderID {0};
-      kdr::Camera* boundCamera   {NULL};
+      GLuint       boundShaderID   {0};
+      kdr::Camera* boundCamera     {NULL};
+      kdr::Key     cameraBindKey   {kdr::Key::E};
+      kdr::Key     cameraUnbindKey {kdr::Key::Escape};
 
       /**
        * @brief Initializes the GLFW window.
