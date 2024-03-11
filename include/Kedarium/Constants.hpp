@@ -17,7 +17,7 @@ namespace kdr
     /**
      * Version of the Kedarium Engine.
      */
-    inline const std::string ENGINE_VERSION {"0.1"};
+    inline const std::string ENGINE_VERSION {"0.2 InDev"};
     /**
      * Author of the Kedarium Engine.
      */
