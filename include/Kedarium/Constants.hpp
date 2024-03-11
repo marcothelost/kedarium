@@ -13,15 +13,15 @@ namespace kdr
     /**
      * Name of the Kedarium Engine.
      */
-    inline const std::string ENGINE_NAME    {"Kedarium Engine"};
+    inline const std::string ENGINE_NAME {"Kedarium Engine"};
     /**
      * Version of the Kedarium Engine.
      */
-    inline const std::string ENGINE_VERSION {"0.1 InDev"};
+    inline const std::string ENGINE_VERSION {"0.1"};
     /**
      * Author of the Kedarium Engine.
      */
-    inline const std::string ENGINE_AUTHOR  {"marcothelost"};
+    inline const std::string ENGINE_AUTHOR {"marcothelost"};
     /**
      * License under which the Kedarium Engine is distributed.
      */

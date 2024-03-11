@@ -5,8 +5,10 @@ layout (location = 1) in vec3 aCol;
 
 out vec3 vertCol;
 
+uniform mat4 cameraMatrix;
+
 void main()
 {
   vertCol = aCol;
-  gl_Position = vec4(aPos, 1.f);
+  gl_Position = cameraMatrix * vec4(aPos, 1.f);
 }

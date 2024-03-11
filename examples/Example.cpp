@@ -8,11 +8,23 @@
 #include "Kedarium/Color.hpp"
 #include "Kedarium/Graphics.hpp"
 #include "Kedarium/Window.hpp"
+#include "Kedarium/Space.hpp"
+#include "Kedarium/Keys.hpp"
+#include "Kedarium/Camera.hpp"
+#include "Kedarium/Debug.hpp"
 
-// Constants
-const unsigned int WINDOW_WIDTH  {800};
-const unsigned int WINDOW_HEIGHT {600};
-const std::string  WINDOW_TITLE  {"GLFW"};
+// Window Settings
+constexpr unsigned int WINDOW_WIDTH  {800};
+constexpr unsigned int WINDOW_HEIGHT {600};
+const     std::string  WINDOW_TITLE  {"GLFW"};
+
+// Camera Settings
+constexpr float CAMERA_FOV         {60.f};
+constexpr float CAMERA_ASPECT      {(float)WINDOW_WIDTH / WINDOW_HEIGHT};
+constexpr float CAMERA_NEAR        {0.1f};
+constexpr float CAMERA_FAR         {100.f};
+constexpr float CAMERA_SPEED       {3.f};
+constexpr float CAMERA_SENSITIVITY {0.1f};
 
 // Vertices and Indices
 GLfloat vertices[] = {
@@ -58,11 +70,30 @@ class ExampleWindow : public kdr::Window
 
   protected:
     void update()
-    {}
+    {
+      if (this->getBoundCamera() == NULL || !this->getBoundCamera()->getLocked())
+      {
+        return;
+      }
+
+      if (kdr::Keys::isPressed(this->getGlfwWindow(), kdr::Key::C))
+      {
+        kdr::Graphics::usePointMode();
+      }
+      else if (kdr::Keys::isPressed(this->getGlfwWindow(), kdr::Key::V))
+      {
+        kdr::Graphics::useLineMode();
+      }
+      else if (kdr::Keys::isPressed(this->getGlfwWindow(), kdr::Key::B))
+      {
+        kdr::Graphics::useFillMode();
+      }
+    }
 
     void render()
     {
       this->defaultShader.Use();
+      this->setBoundShaderID(this->defaultShader.getID());
       this->VAO1.Bind();
       glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
     }
@@ -84,24 +115,30 @@ int main()
   // Initializing GLFW
   kdr::Core::initializeGlfw();
 
+  // Camera
+  kdr::Camera camera {
+    CAMERA_FOV,
+    CAMERA_ASPECT,
+    CAMERA_NEAR,
+    CAMERA_FAR,
+    CAMERA_SPEED,
+    CAMERA_SENSITIVITY
+  };
+
   // Window
   ExampleWindow window {
     WINDOW_WIDTH,
     WINDOW_HEIGHT,
     WINDOW_TITLE
   };
+  window.setClearColor(kdr::Color::Black);
+  window.setBoundCamera(&camera);
 
   // Initializing the Window
   window.initialize();
 
   // Clear Color
   kdr::Color::RGBA clearColor {kdr::Color::Black};
-  glClearColor(
-    clearColor.red,
-    clearColor.green,
-    clearColor.blue,
-    clearColor.alpha
-  );
 
   // Info Logs
   kdr::Core::printEngineInfo();

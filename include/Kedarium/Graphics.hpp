@@ -15,6 +15,22 @@ namespace kdr
   namespace Graphics
   {
     /**
+     * @brief Sets the OpenGL rendering mode to point mode.
+     */
+    inline void usePointMode()
+    { glPolygonMode(GL_FRONT_AND_BACK, GL_POINT); }
+    /**
+     * @brief Sets the OpenGL rendering mode to line mode.
+     */
+    inline void useLineMode()
+    { glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); }
+    /**
+     * @brief Sets the OpenGL rendering mode to fill mode.
+     */
+    inline void useFillMode()
+    { glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); }
+
+    /**
      * @brief Class representing a shader program.
      */
     class Shader
@@ -27,6 +43,14 @@ namespace kdr
          * @param fragmentPath The file path to the fragment shader source code.
          */
         Shader(const std::string& vertexPath, const std::string& fragmentPath);
+
+        /**
+         * @brief Gets the ID of the shader program.
+         * 
+         * @return The ID of the shader program.
+         */
+        GLuint getID() const
+        { return this->ID; }
 
         /**
          * @brief Activates the shader program for use.
@@ -56,6 +80,14 @@ namespace kdr
          * @param size The size of the vertex data array in bytes.
          */
         VBO(GLfloat vertices[], GLsizeiptr size);
+
+        /**
+         * @brief Gets the ID of the vertex buffer object.
+         * 
+         * @return The ID of the vertex buffer object.
+         */
+        GLuint getID() const
+        { return this->ID; }
 
         /**
          * @brief Binds the VBO for use.
@@ -92,6 +124,14 @@ namespace kdr
         EBO(GLuint indices[], GLsizeiptr size);
 
         /**
+         * @brief Gets the ID of the element buffer object.
+         * 
+         * @return The ID of the element buffer object.
+         */
+        GLuint getID() const
+        { return this->ID; }
+
+        /**
          * @brief Binds the EBO for use.
          */
         void Bind() const
@@ -124,6 +164,14 @@ namespace kdr
          */
         VAO()
         { glGenVertexArrays(1, &this->ID); }
+
+         /**
+         * @brief Gets the ID of the vertex array object.
+         * 
+         * @return The ID of the vertex array object.
+         */
+        GLuint getID() const
+        { return this->ID; }
 
         /**
          * @brief Binds the VAO for use.
