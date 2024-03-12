@@ -25,14 +25,15 @@ namespace kdr
        * @brief Constructs a camera with specified parameters.
        * 
        * @param fov The field of view angle in degrees.
-       * @param aspect The aspect ratio of the viewport (width / height).
+       * @param bufferWidth The width of the rendering buffer.
+       * @param bufferHeight The height of the rendering buffer.
        * @param zNear The near clipping plane.
        * @param zFar The far clipping plane.
        * @param speed The movement speed of the camera.
        * @param sensitivity The mouse sensitivity of the camera.
        */
-      Camera(const float fov, const float aspect, const float zNear, const float zFar, const float speed, const float sensitivity)
-      : fov(fov), aspect(aspect), zNear(zNear), zFar(zFar), speed(speed), sensitivity(sensitivity)
+      Camera(const float fov, const float bufferWidth, const float bufferHeight, const float zNear, const float zFar, const float speed, const float sensitivity)
+      : fov(fov), bufferWidth(bufferWidth), bufferHeight(bufferHeight), zNear(zNear), zFar(zFar), speed(speed), sensitivity(sensitivity)
       {}
 
       /**
@@ -43,12 +44,19 @@ namespace kdr
       float getFov() const
       { return this->fov; }
       /**
-       * @brief Gets the aspect ratio of the camera viewport.
+       * @brief Gets the width of the rendering buffer.
        * 
-       * @return The aspect ratio of the viewport (width / height).
+       * @return The width of the rendering buffer.
        */
-      float getAspect() const
-      { return this->aspect; }
+      float getBufferWidth() const
+      { return this->bufferWidth; }
+      /**
+       * @brief Gets the height of the rendering buffer.
+       * 
+       * @return The height of the rendering buffer.
+       */
+      float getBufferHeight() const
+      { return this->bufferHeight; }
       /**
        * @brief Gets the near clipping plane of the camera.
        * 
@@ -93,12 +101,19 @@ namespace kdr
       void setFov(const float fov)
       { this->fov = fov; }
       /**
-       * @brief Sets the aspect ratio of the camera viewport.
+       * @brief Sets the width of the rendering buffer.
        * 
-       * @param aspect The new aspect ratio of the viewport (width / height).
+       * @param bufferWidth The new width of the rendering buffer.
        */
-      void setAspect(const float aspect)
-      { this->aspect = aspect; }
+      void setBufferWidth(const float bufferWidth)
+      { this->bufferWidth = bufferWidth; this->aspect = this->bufferWidth / this->bufferHeight; }
+      /**
+       * @brief Sets the height of the rendering buffer.
+       * 
+       * @param bufferHeight The new height of the rendering buffer.
+       */
+      void setBufferHeight(const float bufferHeight)
+      { this->bufferHeight = bufferHeight; this->aspect = this->bufferWidth / this->bufferHeight; }
       /**
        * @brief Sets the near clipping plane of the camera.
        * 
@@ -169,12 +184,14 @@ namespace kdr
       void applyMatrix(const GLuint shaderID, const std::string& uniformName);
 
     private:
-      float fov         {60.f};
-      float aspect      {1.f};
-      float zNear       {0.1f};
-      float zFar        {100.f};
-      float speed       {5.f};
-      float sensitivity {10.f};
+      float fov          {60.f};
+      float bufferWidth  {800.f};
+      float bufferHeight {800.f};
+      float zNear        {0.1f};
+      float zFar         {100.f};
+      float speed        {5.f};
+      float sensitivity  {10.f};
+      float aspect       {1.f};
 
       kdr::Space::Vec3 position {0.f, 0.f,  3.f};
       kdr::Space::Vec3 front    {0.f, 0.f, -1.f};

@@ -39,6 +39,14 @@ namespace kdr
         }
 
         /**
+         * @brief Sets the position of the element.
+         * 
+         * @param position The new position of the element.
+         */
+        void setPosition(const kdr::Space::Vec2 position)
+        { this->position = position; }
+
+        /**
          * @brief Applies the position of the GUI element to a shader uniform.
          * 
          * @param shaderID The ID of the shader program.

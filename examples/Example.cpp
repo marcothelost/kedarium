@@ -22,7 +22,6 @@ const     std::string  WINDOW_TITLE  {"GLFW"};
 
 // Camera Settings
 constexpr float CAMERA_FOV         {60.f};
-constexpr float CAMERA_ASPECT      {(float)WINDOW_WIDTH / WINDOW_HEIGHT};
 constexpr float CAMERA_NEAR        {0.1f};
 constexpr float CAMERA_FAR         {100.f};
 constexpr float CAMERA_SPEED       {3.f};
@@ -53,8 +52,13 @@ class ExampleWindow : public kdr::Window
       this->defaultShader.Delete();
     }
 
-    void initialize()
-    {}
+    void onResize()
+    {
+      this->crosshair.setPosition({
+        (float)this->getWidth() / 2.f - 8.f,
+        (float)this->getHeight() / 2.f - 8.f
+      });
+    }
 
   protected:
     void update()
@@ -120,7 +124,7 @@ class ExampleWindow : public kdr::Window
       GL_UNSIGNED_BYTE
     };
     kdr::GUI::Element crosshair {
-      {392.f, 292.f},
+      {(float)WINDOW_WIDTH / 2.f - 8.f, (float)WINDOW_HEIGHT / 2.f - 8.f},
       16.f,
       16.f
     };
@@ -143,7 +147,8 @@ int main()
   // Camera
   kdr::Camera camera {
     CAMERA_FOV,
-    CAMERA_ASPECT,
+    WINDOW_WIDTH,
+    WINDOW_HEIGHT,
     CAMERA_NEAR,
     CAMERA_FAR,
     CAMERA_SPEED,
@@ -158,9 +163,6 @@ int main()
   };
   window.setClearColor(kdr::Color::Black);
   window.bindCamera(&camera);
-
-  // Initializing the Window
-  window.initialize();
 
   // Clear Color
   kdr::Color::RGBA clearColor {kdr::Color::Black};

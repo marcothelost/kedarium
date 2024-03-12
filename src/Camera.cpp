@@ -76,8 +76,8 @@ void kdr::Camera::updateMatrix2D()
 
   projection = kdr::Space::ortho(
     0.f,
-    800.f,
-    600.f,
+    this->bufferWidth,
+    this->bufferHeight,
     0.f,
     -1.f,
     1.f

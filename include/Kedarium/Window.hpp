@@ -105,6 +105,20 @@ namespace kdr
       { return this->boundCamera; }
 
       /**
+       * @brief Sets the width of the window.
+       * 
+       * @param width The new width of the window.
+       */
+      void setWidth(const float width)
+      { this->width = width; }
+      /**
+       * @brief Sets the height of the window.
+       * 
+       * @param height The new height of the window.
+       */
+      void setHeight(const float height)
+      { this->height = height; }
+      /**
        * Sets the clear color for the window.
        * 
        * @param color The color to set as the clear color.
@@ -119,6 +133,12 @@ namespace kdr
           color.alpha
         );
       }
+
+      /**
+       * @brief Virtual function called when the window is resized.
+       */
+      virtual void onResize()
+      {}
 
       /**
        * @brief Maximizes the window.
@@ -213,11 +233,13 @@ namespace kdr
       /**
        * @brief Virtual function to update the window state.
        */
-      virtual void update() = 0;
+      virtual void update()
+      {}
       /**
        * @brief Virtual function to render the window contents.
        */
-      virtual void render() = 0;
+      virtual void render()
+      {}
 
     private:
       unsigned int width  {800};

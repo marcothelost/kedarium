@@ -4,9 +4,14 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
   kdr::Window* windowInstance = (kdr::Window*)glfwGetWindowUserPointer(window);
 
+  windowInstance->setWidth(width);
+  windowInstance->setHeight(height);
+  windowInstance->onResize();
+
   if (windowInstance->getBoundCamera() != NULL)
   {
-    windowInstance->getBoundCamera()->setAspect((float)width / height);
+    windowInstance->getBoundCamera()->setBufferWidth((float)width);
+    windowInstance->getBoundCamera()->setBufferHeight((float)height);
   }
   glViewport(
     0,
