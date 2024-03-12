@@ -143,8 +143,6 @@ void kdr::Window::_updateCamera()
 
   this->boundCamera->handleMouse(this->glfwWindow);
   this->boundCamera->handleKeyboard(this->glfwWindow, this->deltaTime);
-  this->boundCamera->updateMatrix();
-  this->boundCamera->applyMatrix(this->boundShaderID, "cameraMatrix");
 }
 
 void kdr::Window::_update()
@@ -158,6 +156,7 @@ void kdr::Window::_update()
 void kdr::Window::_render()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  this->use3D();
   this->render();
   glfwSwapBuffers(this->glfwWindow);
 }

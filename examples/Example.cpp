@@ -84,6 +84,8 @@ class ExampleWindow : public kdr::Window
       this->renderSolid(mesh);
       this->bindTexture(floorTexture);
       this->renderSolid(plane);
+      this->use2D();
+      this->renderSolid(mesh);
     }
 
   private:

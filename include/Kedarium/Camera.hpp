@@ -153,9 +153,13 @@ namespace kdr
        */
       void handleMouse(GLFWwindow* window);
       /**
-       * @brief Updates the camera matrix.
+       * @brief Updates the transformation matrix for 2D rendering.
        */
-      void updateMatrix();
+      void updateMatrix2D();
+      /**
+       * @brief Updates the transformation matrix for 3D rendering.
+       */
+      void updateMatrix3D();
       /**
        * @brief Applies the camera matrix to a shader uniform.
        * 

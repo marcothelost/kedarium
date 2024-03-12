@@ -127,6 +127,24 @@ namespace kdr
        * @brief Unmaximizes the window.
        */
       void unmaximize();
+      /**
+       * @brief Switches the rendering mode to 2D.
+       */
+      void use2D()
+      {
+        if (this->boundCamera == NULL) return;
+        this->boundCamera->updateMatrix2D();
+        this->boundCamera->applyMatrix(this->boundShaderID, "cameraMatrix");
+      }
+      /**
+       * @brief Switches the rendering mode to 3D.
+       */
+      void use3D()
+      {
+        if (this->boundCamera == NULL) return;
+        this->boundCamera->updateMatrix3D();
+        this->boundCamera->applyMatrix(this->boundShaderID, "cameraMatrix");
+      }
 
       /**
        * @brief Binds a shader to the window.
