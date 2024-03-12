@@ -2,11 +2,12 @@
 #define KDR_SOLIDS_HPP
 
 #include <GL/glew.h>
+#include <vector>
 #include <string>
 
 #include "Graphics.hpp"
 #include "Space.hpp"
-#include "Debug.hpp"
+#include "Object.hpp"
 
 namespace kdr
 {
@@ -181,6 +182,29 @@ namespace kdr
          * This function renders the pyramid using OpenGL.
          */
         void render();
+    };
+
+    /**
+     * @brief Class representing a mesh loaded from an OBJ file.
+     */
+    class Mesh : public kdr::Solids::Solid
+    {
+      public:
+        /**
+         * @brief Constructs a Mesh object from an OBJ file.
+         * 
+         * @param position The position of the mesh in 3D space.
+         * @param objPath The path to the OBJ file containing the mesh data.
+         */
+        Mesh(const kdr::Space::Vec3& position, const std::string objPath);
+
+        /**
+         * @brief Renders the mesh.
+         */
+        void render();
+
+      private:
+        unsigned int indexCount {0};
     };
   }
 }

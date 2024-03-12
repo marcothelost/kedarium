@@ -1,6 +1,6 @@
 #include "Kedarium/Object.hpp"
 
-bool kdr::Object::loadFromObj(const std::string& objPath, GLfloat* oVertices, GLsizeiptr& oVerticesSize, GLuint* oIndices, GLsizeiptr& oIndicesSize)
+bool kdr::Object::loadFromObj(const std::string& objPath, std::vector<GLfloat>& oVertices, GLsizeiptr& oVerticesSize, std::vector<GLuint>& oIndices, GLsizeiptr& oIndicesSize)
 {
   std::ifstream file(objPath);
   if (!file.is_open())
@@ -71,7 +71,7 @@ bool kdr::Object::loadFromObj(const std::string& objPath, GLfloat* oVertices, GL
           {
             faceData.push_back(std::stoi(value));
           }
-          else if (valueNumber == 2)
+          else if (valueNumber == 1)
           {
             faceData.push_back(std::stoi(value));
           }
@@ -92,26 +92,26 @@ bool kdr::Object::loadFromObj(const std::string& objPath, GLfloat* oVertices, GL
   std::vector<GLfloat> vertices;
   std::vector<GLuint>  indices;
 
-  for (int i = 0; i < faceData.size() / 2; i++)
+  for (int i = 0; i < (int)(faceData.size() / 2); i++)
   {
-    int posIndex = faceData.at(i);
-    int texIndex = faceData.at(i + 1);
+    int posIndex = faceData.at(i * 2);
+    int texIndex = faceData.at(i * 2 + 1);
 
-    vertices.push_back(vecVals.at(posIndex));
-    vertices.push_back(vecVals.at(posIndex + 1));
-    vertices.push_back(vecVals.at(posIndex + 2));
+    vertices.push_back(vecVals.at((posIndex - 1) * 3));
+    vertices.push_back(vecVals.at((posIndex - 1) * 3 + 1));
+    vertices.push_back(vecVals.at((posIndex - 1) * 3 + 2));
     vertices.push_back(1.f);
     vertices.push_back(1.f);
     vertices.push_back(1.f);
-    vertices.push_back(vecVals.at(texIndex));
-    vertices.push_back(vecVals.at(texIndex + 1));
+    vertices.push_back(texVals.at((texIndex - 1) * 2));
+    vertices.push_back(texVals.at((texIndex - 1) * 2 + 1));
 
     indices.push_back(i);
   }
 
-  oVertices = &vertices[0];
+  oVertices = vertices;
   oVerticesSize = sizeof(GLfloat) * vertices.size();
-  oIndices = &indices[0];
+  oIndices = indices;
   oIndicesSize = sizeof(GLuint) * indices.size();
 
   return true;

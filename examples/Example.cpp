@@ -12,7 +12,6 @@
 #include "Kedarium/Keys.hpp"
 #include "Kedarium/Camera.hpp"
 #include "Kedarium/Solids.hpp"
-#include "Kedarium/Object.hpp"
 #include "Kedarium/Debug.hpp"
 
 // Window Settings
@@ -54,13 +53,7 @@ class ExampleWindow : public kdr::Window
     }
 
     void initialize()
-    {
-      GLfloat* v {NULL};
-      GLuint* i {NULL};
-      GLsizeiptr vs;
-      GLsizeiptr is;
-      kdr::Object::loadFromObj("assets/Objects/sphere.obj", v, vs, i, is);
-    }
+    {}
 
   protected:
     void update()
@@ -90,8 +83,8 @@ class ExampleWindow : public kdr::Window
       testTexture.TextureUnit(this->defaultShader.getID(), "tex0", 0);
       testTexture.Bind();
       this->setBoundShaderID(this->defaultShader.getID());
-      this->pyramid.applyModelMatrix(this->defaultShader.getID(), "model");
-      this->pyramid.render();
+      this->mesh.applyModelMatrix(this->defaultShader.getID(), "model");
+      this->mesh.render();
       floorTexture.TextureUnit(this->defaultShader.getID(), "tex0", 0);
       floorTexture.Bind();
       this->plane.applyModelMatrix(this->defaultShader.getID(), "model");
@@ -116,14 +109,13 @@ class ExampleWindow : public kdr::Window
       GL_UNSIGNED_BYTE
     };
     kdr::Solids::Plane plane {
-      {0.f, -0.5f, 0.f},
+      {0.f, -1.f, 0.f},
       5.f,
       5.f
     };
-    kdr::Solids::Pyramid pyramid {
+    kdr::Solids::Mesh mesh {
       {0.f, 0.f, 0.f},
-      1.f,
-      1.f
+      "assets/Objects/sphere.obj"
     };
 };
 

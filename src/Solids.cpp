@@ -171,3 +171,22 @@ void kdr::Solids::Pyramid::render()
   glDrawElements(GL_TRIANGLES, sizeof(pyramidIndices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
   this->VAO->Unbind();
 }
+
+kdr::Solids::Mesh::Mesh(const kdr::Space::Vec3& position, const std::string objPath) : kdr::Solids::Solid(position)
+{
+  std::vector<GLfloat> vertices {NULL};
+  std::vector<GLuint>  indices  {NULL};
+  GLsizeiptr verticesSize {0};
+  GLsizeiptr indicesSize  {0};
+
+  kdr::Object::loadFromObj(objPath, vertices, verticesSize, indices, indicesSize);
+  this->initializeMembers(&vertices[0], verticesSize, &indices[0], indicesSize);
+  this->indexCount = indices.size();
+}
+
+void kdr::Solids::Mesh::render()
+{
+  this->VAO->Bind();
+  glDrawElements(GL_TRIANGLES, this->indexCount * sizeof(GLuint), GL_UNSIGNED_INT, NULL);
+  this->VAO->Unbind();
+}
