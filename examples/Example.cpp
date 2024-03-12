@@ -11,8 +11,9 @@
 #include "Kedarium/Space.hpp"
 #include "Kedarium/Keys.hpp"
 #include "Kedarium/Camera.hpp"
-#include "Kedarium/Debug.hpp"
 #include "Kedarium/Solids.hpp"
+#include "Kedarium/Object.hpp"
+#include "Kedarium/Debug.hpp"
 
 // Window Settings
 constexpr unsigned int WINDOW_WIDTH  {800};
@@ -53,7 +54,13 @@ class ExampleWindow : public kdr::Window
     }
 
     void initialize()
-    {}
+    {
+      GLfloat* v {NULL};
+      GLuint* i {NULL};
+      GLsizeiptr vs;
+      GLsizeiptr is;
+      kdr::Object::loadFromObj("assets/Objects/sphere.obj", v, vs, i, is);
+    }
 
   protected:
     void update()

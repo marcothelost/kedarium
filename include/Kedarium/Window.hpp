@@ -11,8 +11,6 @@
 #include "Keys.hpp"
 #include "Camera.hpp"
 
-void framebufferSizeCallback(GLFWwindow* window, int width, int height);
-
 namespace kdr
 {
   /**

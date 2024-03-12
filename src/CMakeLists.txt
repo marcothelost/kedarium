@@ -9,6 +9,7 @@ add_library(
   Space.cpp
   Camera.cpp
   Solids.cpp
+  Object.cpp
 )
 
 # Include Directory
