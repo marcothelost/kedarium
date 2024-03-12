@@ -11,6 +11,7 @@
 #include "Kedarium/Space.hpp"
 #include "Kedarium/Keys.hpp"
 #include "Kedarium/Camera.hpp"
+#include "Kedarium/Solids.hpp"
 #include "Kedarium/Debug.hpp"
 
 // Window Settings
@@ -48,25 +49,11 @@ class ExampleWindow : public kdr::Window
 
     ~ExampleWindow()
     {
-      this->VAO1.Delete();
-      this->VBO1.Delete();
-      this->EBO1.Delete();
       this->defaultShader.Delete();
     }
 
     void initialize()
-    {
-      this->VAO1.Bind();
-      this->VBO1.Bind();
-      this->EBO1.Bind();
-
-      this->VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(GLfloat), (void*)0);
-      this->VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
-
-      this->VAO1.Unbind();
-      this->VBO1.Unbind();
-      this->EBO1.Unbind();
-    }
+    {}
 
   protected:
     void update()
@@ -92,22 +79,39 @@ class ExampleWindow : public kdr::Window
 
     void render()
     {
-      this->defaultShader.Use();
-      this->setBoundShaderID(this->defaultShader.getID());
-      this->VAO1.Bind();
-      glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
+      this->bindShader(defaultShader);
+      this->bindTexture(testTexture);
+      this->renderSolid(mesh);
+      this->bindTexture(floorTexture);
+      this->renderSolid(plane);
     }
 
   private:
-    kdr::Graphics::Shader defaultShader
-    {
+    kdr::Graphics::Shader defaultShader {
       "assets/Shaders/default.vert",
       "assets/Shaders/default.frag"
     };
-
-    kdr::Graphics::VAO VAO1;
-    kdr::Graphics::VBO VBO1 {vertices, sizeof(vertices)};
-    kdr::Graphics::EBO EBO1 {indices, sizeof(indices)};
+    kdr::Graphics::Texture testTexture {
+      "assets/Textures/test.png",
+      GL_TEXTURE_2D,
+      GL_TEXTURE0,
+      GL_UNSIGNED_BYTE
+    };
+    kdr::Graphics::Texture floorTexture {
+      "assets/Textures/floor.png",
+      GL_TEXTURE_2D,
+      GL_TEXTURE0,
+      GL_UNSIGNED_BYTE
+    };
+    kdr::Solids::Plane plane {
+      {0.f, -1.f, 0.f},
+      5.f,
+      5.f
+    };
+    kdr::Solids::Mesh mesh {
+      {0.f, 0.f, 0.f},
+      "assets/Objects/sphere.obj"
+    };
 };
 
 int main()
@@ -132,7 +136,7 @@ int main()
     WINDOW_TITLE
   };
   window.setClearColor(kdr::Color::Black);
-  window.setBoundCamera(&camera);
+  window.bindCamera(&camera);
 
   // Initializing the Window
   window.initialize();

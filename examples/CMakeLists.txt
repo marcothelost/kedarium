@@ -5,7 +5,7 @@ add_executable(
 )
 
 # Libraries
-target_link_libraries(example PRIVATE GL GLEW glfw Kedarium)
+target_link_libraries(example PRIVATE GL GLEW glfw png Kedarium)
 
 # Include Directory
 target_include_directories(example PUBLIC ${CMAKE_SOURCE_DIR}/include)

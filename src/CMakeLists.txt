@@ -3,10 +3,13 @@ add_library(
   Kedarium
   Core.cpp
   File.cpp
+  Image.cpp
   Graphics.cpp
   Window.cpp
   Space.cpp
   Camera.cpp
+  Solids.cpp
+  Object.cpp
 )
 
 # Include Directory
