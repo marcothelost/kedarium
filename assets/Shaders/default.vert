@@ -8,10 +8,11 @@ out vec3 vertCol;
 out vec2 vertTex;
 
 uniform mat4 cameraMatrix;
+uniform mat4 model;
 
 void main()
 {
   vertCol = aCol;
   vertTex = aTex;
-  gl_Position = cameraMatrix * vec4(aPos, 1.f);
+  gl_Position = cameraMatrix * model * vec4(aPos, 1.f);
 }

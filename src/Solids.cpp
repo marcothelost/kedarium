@@ -109,3 +109,26 @@ void kdr::Solids::Cuboid::render()
   glDrawElements(GL_TRIANGLES, sizeof(cuboidIndices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
   this->VAO->Unbind();
 }
+
+GLuint planeIndices[] = {
+  0, 1, 3,
+  0, 3, 2,
+};
+
+kdr::Solids::Plane::Plane(const kdr::Space::Vec3& position, const float length, const float width) : kdr::Solids::Solid(position)
+{
+  GLfloat planeVertices[] = {
+    -(length / 2.f), 0.f,  (width / 2.f), 1.f, 1.f, 1.f, 0.f,    0.f,   // 0 00 Top
+     (length / 2.f), 0.f,  (width / 2.f), 1.f, 1.f, 1.f, length, 0.f,   // 1 10 Top
+    -(length / 2.f), 0.f, -(width / 2.f), 1.f, 1.f, 1.f, 0.f,    width, // 2 01 Top
+     (length / 2.f), 0.f, -(width / 2.f), 1.f, 1.f, 1.f, length, width, // 3 11 Top
+  };
+  this->initializeMembers(planeVertices, sizeof(planeVertices), planeIndices, sizeof(planeIndices));
+}
+
+void kdr::Solids::Plane::render()
+{
+  this->VAO->Bind();
+  glDrawElements(GL_TRIANGLES, sizeof(planeIndices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
+  this->VAO->Unbind();
+}

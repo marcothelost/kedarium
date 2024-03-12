@@ -6,6 +6,7 @@
 
 #include "Graphics.hpp"
 #include "Space.hpp"
+#include "Debug.hpp"
 
 namespace kdr
 {
@@ -134,6 +135,27 @@ namespace kdr
 
         /**
          * @brief Renders the cuboid.
+         */
+        void render();
+    };
+
+    /**
+     * @brief A class representing a plane in 3D space.
+     */
+    class Plane : public kdr::Solids::Solid
+    {
+      public:
+        /**
+         * @brief Constructs a Plane object with the specified position, length, and width.
+         * 
+         * @param position The position of the plane.
+         * @param length The length of the plane.
+         * @param width The width of the plane.
+         */
+        Plane(const kdr::Space::Vec3& position, const float length, const float width);
+
+        /**
+         * @brief Renders the plane.
          */
         void render();
     };

@@ -83,7 +83,12 @@ class ExampleWindow : public kdr::Window
       testTexture.TextureUnit(this->defaultShader.getID(), "tex0", 0);
       testTexture.Bind();
       this->setBoundShaderID(this->defaultShader.getID());
+      this->cuboid.applyModelMatrix(this->defaultShader.getID(), "model");
       this->cuboid.render();
+      floorTexture.TextureUnit(this->defaultShader.getID(), "tex0", 0);
+      floorTexture.Bind();
+      this->plane.applyModelMatrix(this->defaultShader.getID(), "model");
+      this->plane.render();
     }
 
   private:
@@ -96,6 +101,17 @@ class ExampleWindow : public kdr::Window
       GL_TEXTURE_2D,
       GL_TEXTURE0,
       GL_UNSIGNED_BYTE
+    };
+    kdr::Graphics::Texture floorTexture {
+      "assets/Textures/floor.png",
+      GL_TEXTURE_2D,
+      GL_TEXTURE0,
+      GL_UNSIGNED_BYTE
+    };
+    kdr::Solids::Plane plane {
+      {0.f, -0.5f, 0.f},
+      5.f,
+      5.f
     };
     kdr::Solids::Cuboid cuboid {
       {0.f, 0.f, 0.f},
