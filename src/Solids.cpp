@@ -65,7 +65,7 @@ kdr::Solids::Cube::Cube(const kdr::Space::Vec3& position, const float edgeLength
   this->initializeMembers(cubeVertices, sizeof(cubeVertices), cuboidIndices, sizeof(cuboidIndices));
 }
 
-void kdr::Solids::Cube::render()
+void kdr::Solids::Cube::render() const
 {
   this->VAO->Bind();
   glDrawElements(GL_TRIANGLES, sizeof(cuboidIndices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
@@ -103,7 +103,7 @@ kdr::Solids::Cuboid::Cuboid(const kdr::Space::Vec3& position, const float length
   this->initializeMembers(cubeVertices, sizeof(cubeVertices), cuboidIndices, sizeof(cuboidIndices));
 }
 
-void kdr::Solids::Cuboid::render()
+void kdr::Solids::Cuboid::render() const
 {
   this->VAO->Bind();
   glDrawElements(GL_TRIANGLES, sizeof(cuboidIndices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
@@ -126,7 +126,7 @@ kdr::Solids::Plane::Plane(const kdr::Space::Vec3& position, const float length, 
   this->initializeMembers(planeVertices, sizeof(planeVertices), planeIndices, sizeof(planeIndices));
 }
 
-void kdr::Solids::Plane::render()
+void kdr::Solids::Plane::render() const
 {
   this->VAO->Bind();
   glDrawElements(GL_TRIANGLES, sizeof(planeIndices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
@@ -165,7 +165,7 @@ kdr::Solids::Pyramid::Pyramid(const kdr::Space::Vec3& position, const float edge
   this->initializeMembers(pyramidVertices, sizeof(pyramidVertices), pyramidIndices, sizeof(pyramidIndices));
 }
 
-void kdr::Solids::Pyramid::render()
+void kdr::Solids::Pyramid::render() const
 {
   this->VAO->Bind();
   glDrawElements(GL_TRIANGLES, sizeof(pyramidIndices) / sizeof(GLuint), GL_UNSIGNED_INT, NULL);
@@ -184,7 +184,7 @@ kdr::Solids::Mesh::Mesh(const kdr::Space::Vec3& position, const std::string objP
   this->indexCount = indices.size();
 }
 
-void kdr::Solids::Mesh::render()
+void kdr::Solids::Mesh::render() const
 {
   this->VAO->Bind();
   glDrawElements(GL_TRIANGLES, this->indexCount * sizeof(GLuint), GL_UNSIGNED_INT, NULL);

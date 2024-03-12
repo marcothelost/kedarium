@@ -73,7 +73,7 @@ namespace kdr
          * 
          * This function should be implemented by subclasses to render the solid object.
          */
-        virtual void render() = 0;
+        virtual void render() const = 0;
 
       protected:
         kdr::Graphics::VAO* VAO {NULL};
@@ -115,7 +115,7 @@ namespace kdr
         /**
          * @brief Renders the cube.
          */
-        void render();
+        void render() const;
     };
 
     /**
@@ -137,7 +137,7 @@ namespace kdr
         /**
          * @brief Renders the cuboid.
          */
-        void render();
+        void render() const;
     };
 
     /**
@@ -158,7 +158,7 @@ namespace kdr
         /**
          * @brief Renders the plane.
          */
-        void render();
+        void render() const;
     };
 
     /**
@@ -181,7 +181,7 @@ namespace kdr
          * 
          * This function renders the pyramid using OpenGL.
          */
-        void render();
+        void render() const;
     };
 
     /**
@@ -201,7 +201,7 @@ namespace kdr
         /**
          * @brief Renders the mesh.
          */
-        void render();
+        void render() const;
 
       private:
         unsigned int indexCount {0};

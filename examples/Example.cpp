@@ -79,16 +79,11 @@ class ExampleWindow : public kdr::Window
 
     void render()
     {
-      this->defaultShader.Use();
-      testTexture.TextureUnit(this->defaultShader.getID(), "tex0", 0);
-      testTexture.Bind();
-      this->setBoundShaderID(this->defaultShader.getID());
-      this->mesh.applyModelMatrix(this->defaultShader.getID(), "model");
-      this->mesh.render();
-      floorTexture.TextureUnit(this->defaultShader.getID(), "tex0", 0);
-      floorTexture.Bind();
-      this->plane.applyModelMatrix(this->defaultShader.getID(), "model");
-      this->plane.render();
+      this->bindShader(defaultShader);
+      this->bindTexture(testTexture);
+      this->renderSolid(mesh);
+      this->bindTexture(floorTexture);
+      this->renderSolid(plane);
     }
 
   private:
@@ -141,7 +136,7 @@ int main()
     WINDOW_TITLE
   };
   window.setClearColor(kdr::Color::Black);
-  window.setBoundCamera(&camera);
+  window.bindCamera(&camera);
 
   // Initializing the Window
   window.initialize();

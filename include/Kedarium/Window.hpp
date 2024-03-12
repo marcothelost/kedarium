@@ -7,9 +7,11 @@
 #include <string>
 
 #include "Core.hpp"
+#include "Graphics.hpp"
 #include "Color.hpp"
 #include "Keys.hpp"
 #include "Camera.hpp"
+#include "Solids.hpp"
 
 namespace kdr
 {
@@ -102,20 +104,6 @@ namespace kdr
       { return this->boundCamera; }
 
       /**
-       * @brief Sets the ID of the shader bound to the window.
-       * 
-       * @param shaderID The ID of the shader program to bind to the window.
-       */
-      void setBoundShaderID(const GLuint shaderID)
-      { this->boundShaderID = shaderID; }
-      /**
-       * @brief Sets the camera bound to the window.
-       * 
-       * @param camera A pointer to the camera object to bind to the window.
-       */
-      void setBoundCamera(kdr::Camera* camera)
-      { this->boundCamera = camera; }
-      /**
        * Sets the clear color for the window.
        * 
        * @param color The color to set as the clear color.
@@ -139,6 +127,54 @@ namespace kdr
        * @brief Unmaximizes the window.
        */
       void unmaximize();
+
+      /**
+       * @brief Binds a shader to the window.
+       * 
+       * @param shader The shader object to bind.
+       */
+      void bindShader(const kdr::Graphics::Shader& shader)
+      {
+        this->boundShaderID = shader.getID();
+        shader.Use();
+      }
+      /**
+       * @brief Binds a texture to the window.
+       * 
+       * @param texture The texture object to bind.
+       */
+      void bindTexture(const kdr::Graphics::Texture& texture)
+      {
+        if (boundShaderID == 0)
+        {
+          return;
+        }
+        texture.TextureUnit(this->boundShaderID, "tex0", 0);
+        texture.Bind();
+      }
+      /**
+       * @brief Binds a camera to the window.
+       * 
+       * @param camera A pointer to the camera object to bind.
+       */
+      void bindCamera(kdr::Camera* camera)
+      {
+        this->boundCamera = camera;
+      }
+      /**
+       * @brief Renders a solid object.
+       * 
+       * @param solid The solid object to render.
+       */
+      void renderSolid(const kdr::Solids::Solid& solid)
+      {
+        if (boundShaderID == 0)
+        {
+          return;
+        }
+        solid.applyModelMatrix(this->boundShaderID, "model");
+        solid.render();
+      }
 
     protected:
       /**
