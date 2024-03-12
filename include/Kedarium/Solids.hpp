@@ -159,6 +159,29 @@ namespace kdr
          */
         void render();
     };
+
+    /**
+     * @brief A class representing a pyramid in 3D space.
+     */
+    class Pyramid : public kdr::Solids::Solid
+    {
+      public:
+        /**
+         * @brief Constructs a Pyramid object with the specified position, edge length, and height.
+         * 
+         * @param position The position of the pyramid.
+         * @param edgeLength The length of the edges of the pyramid's base.
+         * @param height The height of the pyramid.
+         */
+        Pyramid(const kdr::Space::Vec3& position, const float edgeLength, const float height);
+
+        /**
+         * @brief Renders the pyramid.
+         * 
+         * This function renders the pyramid using OpenGL.
+         */
+        void render();
+    };
   }
 }
 

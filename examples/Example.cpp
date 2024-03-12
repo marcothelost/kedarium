@@ -83,8 +83,8 @@ class ExampleWindow : public kdr::Window
       testTexture.TextureUnit(this->defaultShader.getID(), "tex0", 0);
       testTexture.Bind();
       this->setBoundShaderID(this->defaultShader.getID());
-      this->cuboid.applyModelMatrix(this->defaultShader.getID(), "model");
-      this->cuboid.render();
+      this->pyramid.applyModelMatrix(this->defaultShader.getID(), "model");
+      this->pyramid.render();
       floorTexture.TextureUnit(this->defaultShader.getID(), "tex0", 0);
       floorTexture.Bind();
       this->plane.applyModelMatrix(this->defaultShader.getID(), "model");
@@ -113,9 +113,8 @@ class ExampleWindow : public kdr::Window
       5.f,
       5.f
     };
-    kdr::Solids::Cuboid cuboid {
+    kdr::Solids::Pyramid pyramid {
       {0.f, 0.f, 0.f},
-      2.f,
       1.f,
       1.f
     };
