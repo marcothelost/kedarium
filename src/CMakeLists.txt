@@ -10,6 +10,7 @@ add_library(
   Camera.cpp
   Solids.cpp
   Object.cpp
+  GUI.cpp
 )
 
 # Include Directory

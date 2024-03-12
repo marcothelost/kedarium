@@ -12,6 +12,7 @@
 #include "Kedarium/Keys.hpp"
 #include "Kedarium/Camera.hpp"
 #include "Kedarium/Solids.hpp"
+#include "Kedarium/GUI.hpp"
 #include "Kedarium/Debug.hpp"
 
 // Window Settings
@@ -84,14 +85,21 @@ class ExampleWindow : public kdr::Window
       this->renderSolid(mesh);
       this->bindTexture(floorTexture);
       this->renderSolid(plane);
+      this->bindShader(guiShader);
       this->use2D();
-      this->renderSolid(mesh);
+      this->bindTexture(crosshairTexture);
+      this->renderElement(crosshair);
+      this->bindShader(defaultShader);
     }
 
   private:
     kdr::Graphics::Shader defaultShader {
       "assets/Shaders/default.vert",
       "assets/Shaders/default.frag"
+    };
+    kdr::Graphics::Shader guiShader {
+      "assets/Shaders/gui.vert",
+      "assets/Shaders/gui.frag"
     };
     kdr::Graphics::Texture testTexture {
       "assets/Textures/test.png",
@@ -104,6 +112,17 @@ class ExampleWindow : public kdr::Window
       GL_TEXTURE_2D,
       GL_TEXTURE0,
       GL_UNSIGNED_BYTE
+    };
+    kdr::Graphics::Texture crosshairTexture {
+      "assets/Textures/crosshair.png",
+      GL_TEXTURE_2D,
+      GL_TEXTURE0,
+      GL_UNSIGNED_BYTE
+    };
+    kdr::GUI::Element crosshair {
+      {392.f, 292.f},
+      16.f,
+      16.f
     };
     kdr::Solids::Plane plane {
       {0.f, -1.f, 0.f},

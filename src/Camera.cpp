@@ -74,6 +74,15 @@ void kdr::Camera::updateMatrix2D()
   kdr::Space::Mat4 view       {1.f};
   kdr::Space::Mat4 projection {1.f};
 
+  projection = kdr::Space::ortho(
+    0.f,
+    800.f,
+    600.f,
+    0.f,
+    -1.f,
+    1.f
+  );
+
   this->matrix = projection * view;
 }
 

@@ -27,6 +27,123 @@ namespace kdr
     }
 
     /**
+     * @brief Class representing a 2D vector.
+     */
+    class Vec2
+    {
+      public:
+        /**
+         * @brief Default constructor. Initializes vector components to zero.
+         */
+        Vec2()
+        : x(0.f), y(0.f)
+        {}
+        /**
+         * @brief Constructor initializing all components with a scalar value.
+         *
+         * @param scalar The value to set for all components.
+         */
+        Vec2(const float scalar)
+        : x(scalar), y(scalar)
+        {}
+        /**
+         * @brief Constructor initializing components with specific values.
+         *
+         * @param x The x-component.
+         * @param y The y-component.
+         */
+        Vec2(const float x, const float y)
+        : x(x), y(y)
+        {}
+
+        /**
+         * @brief Overloaded addition operator for adding two 2D vectors.
+         * 
+         * @param vec The vector to add.
+         * @return The result of the addition.
+         */
+        kdr::Space::Vec2 operator+(const kdr::Space::Vec2& vec) const
+        {
+          return kdr::Space::Vec2(
+            this->x + vec.x,
+            this->y + vec.y
+          );
+        }
+        /**
+         * @brief Overloaded subtraction operator for subtracting two 2D vectors.
+         * 
+         * @param vec The vector to subtract.
+         * @return The result of the subtraction.
+         */
+        kdr::Space::Vec2 operator-(const kdr::Space::Vec2& vec) const
+        {
+          return kdr::Space::Vec2(
+            this->x - vec.x,
+            this->y - vec.y
+          );
+        }
+        /**
+         * @brief Overloaded multiplication operator for multiplying a vector by a scalar.
+         * 
+         * @tparam T The scalar type.
+         * @param scalar The scalar value to multiply.
+         * @return The result of the multiplication.
+         */
+        template <typename T>
+        kdr::Space::Vec2 operator*(const T scalar)
+        {
+          return kdr::Space::Vec2(
+            static_cast<float>(this->x * scalar),
+            static_cast<float>(this->y * scalar)
+          );
+        }
+        /**
+         * @brief Overloaded multiplication operator for multiplying a scalar by a vector.
+         * 
+         * @tparam T The scalar type.
+         * @param scalar The scalar value to multiply.
+         * @param vec The vector to multiply.
+         * @return The result of the multiplication.
+         */
+        template <typename T>
+        friend kdr::Space::Vec2 operator*(const T scalar, const kdr::Space::Vec2& vec)
+        {
+          return kdr::Space::Vec2(
+            static_cast<float>(vec.x * scalar),
+            static_cast<float>(vec.y * scalar)
+          );
+        }
+
+        /**
+         * @brief Adds the components of the given vector to this vector.
+         * 
+         * @param vec The vector to add.
+         * @return The resulting vector after addition.
+         */
+        kdr::Space::Vec2 operator+=(const kdr::Space::Vec2& vec)
+        {
+          this->x += vec.x;
+          this->y += vec.y;
+          return *this;
+        }
+        /**
+         * @brief Subtracts the components of the given vector from this vector.
+         * 
+         * @param vec The vector to subtract.
+         * @return The resulting vector after subtraction.
+         */
+        kdr::Space::Vec2 operator-=(const kdr::Space::Vec2& vec)
+        {
+          this->x -= vec.x;
+          this->y -= vec.y;
+          return *this;
+        }
+
+        float x {0.f};
+        float y {0.f};
+    };
+
+    /**
      * @brief Class representing a 3D vector.
      */
     class Vec3
@@ -157,6 +274,22 @@ namespace kdr
      * @param vec The vector to normalize.
      * @return The normalized vector.
      */
+    inline kdr::Space::Vec2 normalize(const kdr::Space::Vec2& vec)
+    {
+      const float length = sqrtf(vec.x * vec.x + vec.y * vec.y);
+      if (length == 0.f) return kdr::Space::Vec2 {0.f};
+
+      return kdr::Space::Vec2 {
+        vec.x / length,
+        vec.y / length
+      };
+    }
+    /**
+     * @brief Normalizes the given vector.
+     * 
+     * @param vec The vector to normalize.
+     * @return The normalized vector.
+     */
     inline kdr::Space::Vec3 normalize(const kdr::Space::Vec3& vec)
     {
       const float length = sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
@@ -178,6 +311,17 @@ namespace kdr
     inline float dot(const kdr::Space::Vec3& vecOne, const kdr::Space::Vec3& vecTwo)
     {
       return vecOne.x * vecTwo.x + vecOne.y * vecTwo.y + vecOne.z * vecTwo.z;
+    }
+    /**
+     * @brief Computes the dot product of two 2D vectors.
+     * 
+     * @param vecOne The first vector.
+     * @param vecTwo The second vector.
+     * @return The dot product of the two vectors.
+     */
+    inline float dot(const kdr::Space::Vec2& vecOne, const kdr::Space::Vec2& vecTwo)
+    {
+      return vecOne.x * vecTwo.x + vecOne.y * vecTwo.y;
     }
     /**
      * @brief Computes the cross product of two 3D vectors.
@@ -289,6 +433,18 @@ namespace kdr
       result[3][2] += vec.z;
       return result;
     }
+    /**
+     * @brief Creates an orthographic projection matrix.
+     * 
+     * @param left The left coordinate of the projection volume.
+     * @param right The right coordinate of the projection volume.
+     * @param bottom The bottom coordinate of the projection volume.
+     * @param top The top coordinate of the projection volume.
+     * @param zNear The near clipping plane distance.
+     * @param zFar The far clipping plane distance.
+     * @return The orthographic projection matrix.
+     */
+    kdr::Space::Mat4 ortho(const float left, const float right, const float bottom, const float top, const float zNear, const float zFar);
     /**
      * @brief Creates a perspective projection matrix.
      * 

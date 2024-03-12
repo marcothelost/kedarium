@@ -1,5 +1,19 @@
 #include "Kedarium/Space.hpp"
 
+kdr::Space::Mat4 kdr::Space::ortho(const float left, const float right, const float bottom, const float top, const float zNear, const float zFar)
+{
+  kdr::Space::Mat4 result {1.f};
+  
+  result[0][0] =  2.f / (right - left);
+  result[1][1] =  2.f / (top - bottom);
+  result[2][2] = -2.f / (zFar - zNear);
+  result[3][0] = -(right + left) / (right - left);
+  result[3][1] = -(top + bottom) / (top - bottom);
+  result[3][2] = -(zFar + zNear) / (zFar - zNear);
+
+  return result;
+}
+
 kdr::Space::Mat4 kdr::Space::perspective(const float fov, const float aspect, const float zNear, const float zFar)
 {
   kdr::Space::Mat4 result;

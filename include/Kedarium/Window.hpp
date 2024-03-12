@@ -12,6 +12,7 @@
 #include "Keys.hpp"
 #include "Camera.hpp"
 #include "Solids.hpp"
+#include "GUI.hpp"
 
 namespace kdr
 {
@@ -192,6 +193,20 @@ namespace kdr
         }
         solid.applyModelMatrix(this->boundShaderID, "model");
         solid.render();
+      }
+      /**
+       * @brief Renders a GUI element.
+       * 
+       * @param element The GUI element to render.
+       */
+      void renderElement(const kdr::GUI::Element& element)
+      {
+        if (boundShaderID == 0)
+        {
+          return;
+        }
+        element.applyPosition(this->boundShaderID, "position");
+        element.render();
       }
 
     protected:
