@@ -12,6 +12,7 @@
 #include "Kedarium/Keys.hpp"
 #include "Kedarium/Camera.hpp"
 #include "Kedarium/Solids.hpp"
+#include "Kedarium/Lights.hpp"
 #include "Kedarium/GUI.hpp"
 #include "Kedarium/Debug.hpp"
 
@@ -84,19 +85,17 @@ class ExampleWindow : public kdr::Window
 
     void render()
     {
-      this->bindShader(defaultShader);
-      this->defaultShader.setVector3("lightPos", {0.f, 5.f, 0.f});
-      this->defaultShader.setVector3("lightCol", {1.f, 1.f, 1.f});
-      this->defaultShader.setVector3("camPos", this->getBoundCamera()->getPosition());
+      this->bindShader(&defaultShader);
+      this->useLight(light);
       this->bindTexture(testTexture);
-      this->renderSolid(mesh);
+      this->renderSolid(object);
       this->bindTexture(floorTexture);
       this->renderSolid(plane);
-      this->bindShader(guiShader);
+      this->bindShader(&guiShader);
       this->use2D();
       this->bindTexture(crosshairTexture);
       this->renderElement(crosshair);
-      this->bindShader(defaultShader);
+      this->bindShader(&defaultShader);
     }
 
   private:
@@ -136,9 +135,14 @@ class ExampleWindow : public kdr::Window
       20.f,
       20.f
     };
-    kdr::Solids::Mesh mesh {
+    kdr::Solids::Pyramid object {
       {0.f, 1.f, 0.f},
-      "assets/Objects/sphere.obj"
+      1.f,
+      2.f
+    };
+    kdr::Lights::Light light {
+      {0.f, 5.f, 0.f},
+      kdr::Color::Red
     };
 };
 

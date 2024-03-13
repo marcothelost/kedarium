@@ -1,5 +1,7 @@
 #include "Kedarium/Solids.hpp"
 
+constexpr float CUBE_NORMAL_FACTOR = 0.57735f;
+
 void kdr::Solids::Solid::initializeMembers(GLfloat* vertices, GLsizeiptr verticesSize, GLuint* indices, GLsizeiptr indicesSize)
 {
   this->VAO = new kdr::Graphics::VAO();
@@ -38,30 +40,30 @@ GLuint cuboidIndices[] = {
 kdr::Solids::Cube::Cube(const kdr::Space::Vec3& position, const float edgeLength) : kdr::Solids::Solid(position)
 {
   GLfloat cubeVertices[] = {
-    -(edgeLength / 2.f), -(edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f,  0.f,  0.f,  1.f, // 0  000 Front
-    -(edgeLength / 2.f), -(edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f, -1.f,  0.f,  0.f, // 1  000 Left
-    -(edgeLength / 2.f), -(edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f,  0.f, -1.f,  0.f, // 2  000 Bottom
-     (edgeLength / 2.f), -(edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f,  0.f,  0.f,  1.f, // 3  100 Front
-     (edgeLength / 2.f), -(edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f,  1.f,  0.f,  0.f, // 4  100 Right
-     (edgeLength / 2.f), -(edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f,  0.f, -1.f,  0.f, // 5  100 Bottom
-    -(edgeLength / 2.f),  (edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f,  0.f,  0.f,  1.f, // 6  010 Front
-    -(edgeLength / 2.f),  (edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f, -1.f,  0.f,  0.f, // 7  010 Left
-    -(edgeLength / 2.f),  (edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f,  0.f,  1.f,  0.f, // 8  010 Top
-     (edgeLength / 2.f),  (edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f,  0.f,  0.f,  1.f, // 9  110 Front
-     (edgeLength / 2.f),  (edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f,  1.f,  0.f,  0.f, // 10 110 Right
-     (edgeLength / 2.f),  (edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f,  0.f,  1.f,  0.f, // 11 110 Top
-    -(edgeLength / 2.f), -(edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f,  0.f,  0.f, -1.f, // 12 001 Back
-    -(edgeLength / 2.f), -(edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f, -1.f,  0.f,  0.f, // 13 001 Left
-    -(edgeLength / 2.f), -(edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f,  0.f, -1.f,  0.f, // 14 001 Bottom
-     (edgeLength / 2.f), -(edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f,  0.f,  0.f, -1.f, // 15 101 Back
-     (edgeLength / 2.f), -(edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f,  1.f,  0.f,  0.f, // 16 101 Right
-     (edgeLength / 2.f), -(edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f,  0.f, -1.f,  0.f, // 17 101 Bottom
-    -(edgeLength / 2.f),  (edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f,  0.f,  0.f, -1.f, // 18 011 Back
-    -(edgeLength / 2.f),  (edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f, -1.f,  0.f,  0.f, // 19 011 Left
-    -(edgeLength / 2.f),  (edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f,  0.f,  1.f,  0.f, // 20 011 Top
-     (edgeLength / 2.f),  (edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f,  0.f,  0.f, -1.f, // 21 111 Back
-     (edgeLength / 2.f),  (edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f,  1.f,  0.f,  0.f, // 22 111 Right
-     (edgeLength / 2.f),  (edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f,  0.f,  1.f,  0.f, // 23 111 Top
+    -(edgeLength / 2.f), -(edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 0  000 Front
+    -(edgeLength / 2.f), -(edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 1  000 Left
+    -(edgeLength / 2.f), -(edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 2  000 Bottom
+     (edgeLength / 2.f), -(edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 3  100 Front
+     (edgeLength / 2.f), -(edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 4  100 Right
+     (edgeLength / 2.f), -(edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 5  100 Bottom
+    -(edgeLength / 2.f),  (edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 6  010 Front
+    -(edgeLength / 2.f),  (edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 7  010 Left
+    -(edgeLength / 2.f),  (edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 8  010 Top
+     (edgeLength / 2.f),  (edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 9  110 Front
+     (edgeLength / 2.f),  (edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 10 110 Right
+     (edgeLength / 2.f),  (edgeLength / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 11 110 Top
+    -(edgeLength / 2.f), -(edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 12 001 Back
+    -(edgeLength / 2.f), -(edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 13 001 Left
+    -(edgeLength / 2.f), -(edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 14 001 Bottom
+     (edgeLength / 2.f), -(edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 15 101 Back
+     (edgeLength / 2.f), -(edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 16 101 Right
+     (edgeLength / 2.f), -(edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 17 101 Bottom
+    -(edgeLength / 2.f),  (edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 18 011 Back
+    -(edgeLength / 2.f),  (edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 19 011 Left
+    -(edgeLength / 2.f),  (edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 20 011 Top
+     (edgeLength / 2.f),  (edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 21 111 Back
+     (edgeLength / 2.f),  (edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 22 111 Right
+     (edgeLength / 2.f),  (edgeLength / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 23 111 Top
   };
   this->initializeMembers(cubeVertices, sizeof(cubeVertices), cuboidIndices, sizeof(cuboidIndices));
 }
@@ -76,30 +78,30 @@ void kdr::Solids::Cube::render() const
 kdr::Solids::Cuboid::Cuboid(const kdr::Space::Vec3& position, const float length, const float height, const float width) : kdr::Solids::Solid(position)
 {
   GLfloat cuboidVertices[] = {
-    -(length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f,  0.f,  0.f,  1.f, // 0  000 Front
-    -(length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f, -1.f,  0.f,  0.f, // 1  000 Left
-    -(length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f,  0.f, -1.f,  0.f, // 2  000 Bottom
-     (length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f,  0.f,  0.f,  1.f, // 3  100 Front
-     (length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f,  1.f,  0.f,  0.f, // 4  100 Right
-     (length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f,  0.f, -1.f,  0.f, // 5  100 Bottom
-    -(length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f,  0.f,  0.f,  1.f, // 6  010 Front
-    -(length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f, -1.f,  0.f,  0.f, // 7  010 Left
-    -(length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f,  0.f,  1.f,  0.f, // 8  010 Top
-     (length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f,  0.f,  0.f,  1.f, // 9  110 Front
-     (length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f,  1.f,  0.f,  0.f, // 10 110 Right
-     (length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f,  0.f,  1.f,  0.f, // 11 110 Top
-    -(length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f,  0.f,  0.f, -1.f, // 12 001 Back
-    -(length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f, -1.f,  0.f,  0.f, // 13 001 Left
-    -(length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f,  0.f, -1.f,  0.f, // 14 001 Bottom
-     (length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f,  0.f,  0.f, -1.f, // 15 101 Back
-     (length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f,  1.f,  0.f,  0.f, // 16 101 Right
-     (length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f,  0.f, -1.f,  0.f, // 17 101 Bottom
-    -(length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f,  0.f,  0.f, -1.f, // 18 011 Back
-    -(length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f, -1.f,  0.f,  0.f, // 19 011 Left
-    -(length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f,  0.f,  1.f,  0.f, // 20 011 Top
-     (length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f,  0.f,  0.f, -1.f, // 21 111 Back
-     (length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f,  1.f,  0.f,  0.f, // 22 111 Right
-     (length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f,  0.f,  1.f,  0.f, // 23 111 Top
+    -(length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 0  000 Front
+    -(length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 1  000 Left
+    -(length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 2  000 Bottom
+     (length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 3  100 Front
+     (length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 4  100 Right
+     (length / 2.f), -(height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 5  100 Bottom
+    -(length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 6  010 Front
+    -(length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 7  010 Left
+    -(length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 8  010 Top
+     (length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 9  110 Front
+     (length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 10 110 Right
+     (length / 2.f),  (height / 2.f),  (width / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, // 11 110 Top
+    -(length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 12 001 Back
+    -(length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 13 001 Left
+    -(length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 14 001 Bottom
+     (length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 15 101 Back
+     (length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 1.f, 0.f,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 16 101 Right
+     (length / 2.f), -(height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 0.f, 0.f,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 17 101 Bottom
+    -(length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 18 011 Back
+    -(length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 19 011 Left
+    -(length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f, -CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 20 011 Top
+     (length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 0.f, 1.f,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 21 111 Back
+     (length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 22 111 Right
+     (length / 2.f),  (height / 2.f), -(width / 2.f), 1.f, 1.f, 1.f, 1.f, 1.f,  CUBE_NORMAL_FACTOR,  CUBE_NORMAL_FACTOR, -CUBE_NORMAL_FACTOR, // 23 111 Top
   };
   this->initializeMembers(cuboidVertices, sizeof(cuboidVertices), cuboidIndices, sizeof(cuboidIndices));
 }
@@ -154,35 +156,35 @@ kdr::Solids::Pyramid::Pyramid(const kdr::Space::Vec3& position, const float edge
   kdr::Space::Vec3 dirVector {
     -(edgeLength / 2.f),
     height,
-    0.f
+    (edgeLength / 2.f)
   };
-  kdr::Space::Vec3 lineVector {
-    0.f,
-    0.f,
-    -1.f,
-  };
-  kdr::Space::Vec3 normalVector = kdr::Space::normalize(Space::cross(dirVector, lineVector));
-  const float normalFactor = normalVector.y;
-
-  std::cout << normalFactor << '\n';
+  kdr::Space::Vec3 xEdgeVector  {1.f,  0.f,  0.f};
+  kdr::Space::Vec3 zEdgeVector  {0.f,  0.f, -1.f};
+  kdr::Space::Vec3 bottomVector {0.f, -1.f,  0.f};
+  kdr::Space::Vec3 sumVector = dirVector + xEdgeVector + zEdgeVector + bottomVector;
+  kdr::Space::Vec3 normal = kdr::Space::normalize({
+    sumVector.x / 4.f,
+    sumVector.y / 4.f,
+    sumVector.z / 4.f
+  });
 
   GLfloat pyramidVertices[] = {
-    -(edgeLength / 2.f), -(height / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f,  0.f, 0.f,  0.f,          -normalFactor, // 0  00 Front
-    -(edgeLength / 2.f), -(height / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f,  0.f, 0.f, normalFactor,   0.f,          // 1  00 Left
-    -(edgeLength / 2.f), -(height / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f,  1.f, 0.f, -1.f,           0.f,          // 2  00 Bottom
-     (edgeLength / 2.f), -(height / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f,  0.f, 0.f,  0.f,          -normalFactor, // 3  10 Front
-     (edgeLength / 2.f), -(height / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f,  0.f, 0.f, -normalFactor,  0.f,          // 4  10 Right
-     (edgeLength / 2.f), -(height / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f,  1.f, 0.f, -1.f,           0.f,          // 5  10 Bottom
-    -(edgeLength / 2.f), -(height / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f,  0.f, 0.f,  0.f,           normalFactor, // 6  01 Back
-    -(edgeLength / 2.f), -(height / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f,  0.f, 0.f,  normalFactor,  0.f,          // 7  01 Left
-    -(edgeLength / 2.f), -(height / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f,  0.f, 0.f, -1.f,           0.f,          // 8  01 Bottom
-     (edgeLength / 2.f), -(height / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f,  0.f, 0.f,  0.f,           normalFactor, // 9  11 Back
-     (edgeLength / 2.f), -(height / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f,  0.f, 0.f, -normalFactor,  0.f,          // 10 11 Right
-     (edgeLength / 2.f), -(height / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f,  0.f, 0.f, -1.f,           0.f,          // 11 11 Bottom
-     0.f,                 (height / 2.f),  0.f,                1.f, 1.f, 1.f, 0.5f, 1.f, 0.f, 0.f,           -normalFactor, // 12 Top (Front)
-     0.f,                 (height / 2.f),  0.f,                1.f, 1.f, 1.f, 0.5f, 1.f, 0.f, -normalFactor,  0.f,          // 13 Top (Right)
-     0.f,                 (height / 2.f),  0.f,                1.f, 1.f, 1.f, 0.5f, 1.f, 0.f,  0.f,           normalFactor, // 14 Top (Back)
-     0.f,                 (height / 2.f),  0.f,                1.f, 1.f, 1.f, 0.5f, 1.f, 0.f,  normalFactor,  0.f,          // 15 Top (Left)
+    -(edgeLength / 2.f), -(height / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f,  0.f, -normal.x,  normal.y,  normal.z, // 0  00 Front
+    -(edgeLength / 2.f), -(height / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f,  0.f, -normal.x,  normal.y,  normal.z, // 1  00 Left
+    -(edgeLength / 2.f), -(height / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f,  1.f, -normal.x, -normal.y,  normal.z, // 2  00 Bottom
+     (edgeLength / 2.f), -(height / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f,  0.f,  normal.x,  normal.y,  normal.z, // 3  10 Front
+     (edgeLength / 2.f), -(height / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f,  0.f,  normal.x,  normal.y,  normal.z, // 4  10 Right
+     (edgeLength / 2.f), -(height / 2.f),  (edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f,  1.f,  normal.x, -normal.y,  normal.z, // 5  10 Bottom
+    -(edgeLength / 2.f), -(height / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f,  0.f, -normal.x,  normal.y, -normal.z, // 6  01 Back
+    -(edgeLength / 2.f), -(height / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f,  0.f, -normal.x,  normal.y, -normal.z, // 7  01 Left
+    -(edgeLength / 2.f), -(height / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f,  0.f, -normal.x, -normal.y, -normal.z, // 8  01 Bottom
+     (edgeLength / 2.f), -(height / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f,  0.f,  normal.x,  normal.y, -normal.z, // 9  11 Back
+     (edgeLength / 2.f), -(height / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 1.f,  0.f,  normal.x,  normal.y, -normal.z, // 10 11 Right
+     (edgeLength / 2.f), -(height / 2.f), -(edgeLength / 2.f), 1.f, 1.f, 1.f, 0.f,  0.f,  normal.x, -normal.y, -normal.z, // 11 11 Bottom
+     0.f,                 (height / 2.f),  0.f,                1.f, 1.f, 1.f, 0.5f, 1.f,   0.f,      1.f,       0.f,      // 12 Top (Front)
+     0.f,                 (height / 2.f),  0.f,                1.f, 1.f, 1.f, 0.5f, 1.f,   0.f,      1.f,       0.f,      // 13 Top (Right)
+     0.f,                 (height / 2.f),  0.f,                1.f, 1.f, 1.f, 0.5f, 1.f,   0.f,      1.f,       0.f,      // 14 Top (Back)
+     0.f,                 (height / 2.f),  0.f,                1.f, 1.f, 1.f, 0.5f, 1.f,   0.f,      1.f,       0.f,      // 15 Top (Left)
   };
   this->initializeMembers(pyramidVertices, sizeof(pyramidVertices), pyramidIndices, sizeof(pyramidIndices));
 }

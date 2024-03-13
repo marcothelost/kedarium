@@ -121,7 +121,7 @@ void kdr::Window::_updateDeltaTime()
 
 void kdr::Window::_updateCamera()
 {
-  if (this->boundShaderID == 0 || this->boundCamera == NULL) {
+  if (this->boundShader == NULL || this->boundCamera == NULL) {
     return;
   }
 

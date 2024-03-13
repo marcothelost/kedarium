@@ -12,6 +12,7 @@
 #include "Keys.hpp"
 #include "Camera.hpp"
 #include "Solids.hpp"
+#include "Lights.hpp"
 #include "GUI.hpp"
 
 namespace kdr
@@ -90,12 +91,12 @@ namespace kdr
       float getDeltaTime() const
       { return this->deltaTime; }
       /**
-       * @brief Gets the ID of the shader bound to the window.
+       * @brief Gets the shader currently bound to the window.
        *
-       * @return The ID of the bound shader.
+       * @return A pointer to the bound shader.
        */
-      GLuint getBoundShaderID() const
-      { return this->boundShaderID; }
+      kdr::Graphics::Shader* getBoundShader() const
+      { return this->boundShader; }
       /**
        * @brief Gets the camera bound to the window.
        *
@@ -153,29 +154,29 @@ namespace kdr
        */
       void use2D()
       {
-        if (this->boundCamera == NULL) return;
+        if (this->boundCamera == NULL || this->boundShader == NULL) return;
         this->boundCamera->updateMatrix2D();
-        this->boundCamera->applyMatrix(this->boundShaderID, "cameraMatrix");
+        this->boundCamera->applyMatrix(this->boundShader->getID(), "cameraMatrix");
       }
       /**
        * @brief Switches the rendering mode to 3D.
        */
       void use3D()
       {
-        if (this->boundCamera == NULL) return;
+        if (this->boundCamera == NULL || this->boundShader == NULL) return;
         this->boundCamera->updateMatrix3D();
-        this->boundCamera->applyMatrix(this->boundShaderID, "cameraMatrix");
+        this->boundCamera->applyMatrix(this->boundShader->getID(), "cameraMatrix");
       }
 
       /**
        * @brief Binds a shader to the window.
        * 
-       * @param shader The shader object to bind.
+       * @param shader A pointer to the shader object to bind.
        */
-      void bindShader(const kdr::Graphics::Shader& shader)
+      void bindShader(kdr::Graphics::Shader* shader)
       {
-        this->boundShaderID = shader.getID();
-        shader.Use();
+        this->boundShader = shader;
+        shader->Use();
       }
       /**
        * @brief Binds a texture to the window.
@@ -184,11 +185,11 @@ namespace kdr
        */
       void bindTexture(const kdr::Graphics::Texture& texture)
       {
-        if (boundShaderID == 0)
+        if (this->boundShader == NULL)
         {
           return;
         }
-        texture.TextureUnit(this->boundShaderID, "tex0", 0);
+        texture.TextureUnit(this->boundShader->getID(), "tex0", 0);
         texture.Bind();
       }
       /**
@@ -207,11 +208,11 @@ namespace kdr
        */
       void renderSolid(const kdr::Solids::Solid& solid)
       {
-        if (boundShaderID == 0)
+        if (this->boundShader == NULL)
         {
           return;
         }
-        solid.applyModelMatrix(this->boundShaderID, "model");
+        solid.applyModelMatrix(this->boundShader->getID(), "model");
         solid.render();
       }
       /**
@@ -221,12 +222,21 @@ namespace kdr
        */
       void renderElement(const kdr::GUI::Element& element)
       {
-        if (boundShaderID == 0)
+        if (this->boundShader == NULL)
         {
           return;
         }
-        element.applyPosition(this->boundShaderID, "position");
+        element.applyPosition(this->boundShader->getID(), "position");
         element.render();
+      }
+      void useLight(const kdr::Lights::Light& light)
+      {
+        if (this->boundShader == NULL)
+        {
+          return;
+        }
+        light.apply(this->boundShader->getID(), "lightPos", "lightCol");
+        this->boundShader->setVector3("camPos", this->getBoundCamera()->getPosition());
       }
 
     protected:
@@ -252,10 +262,10 @@ namespace kdr
       float deltaTime {0.f};
       float lastTime  {(float)glfwGetTime()};
 
-      GLuint       boundShaderID   {0};
-      kdr::Camera* boundCamera     {NULL};
-      kdr::Key     cameraBindKey   {kdr::Key::E};
-      kdr::Key     cameraUnbindKey {kdr::Key::Escape};
+      kdr::Graphics::Shader* boundShader     {0};
+      kdr::Camera*           boundCamera     {NULL};
+      kdr::Key               cameraBindKey   {kdr::Key::E};
+      kdr::Key               cameraUnbindKey {kdr::Key::Escape};
 
       kdr::Key fullscreenKey     {kdr::Key::F};
       bool     fullscreenEnabled {false};

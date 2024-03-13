@@ -14,7 +14,7 @@ uniform sampler2D tex0;
 
 void main()
 {
-  float ambientFactor = 0.1f;
+  float ambientFactor = 0.05f;
   vec3 ambient = lightCol * ambientFactor;
 
   vec3 normal = normalize(vertNorm);
@@ -33,6 +33,6 @@ void main()
   float distance = length(lightPos - fragPos);
   float attenuation = 1.f / (1.f * 0.1f * distance * 0.3f * (distance * distance));
 
-  vec3 lightFactor = (ambient + diffuse + specular) * attenuation;
+  vec3 lightFactor = ambient + (diffuse + specular) * attenuation;
   FragColor = vec4(lightFactor, 1.f) * texture(tex0, vertTex);
 }
