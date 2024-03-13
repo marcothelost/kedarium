@@ -92,8 +92,10 @@ bool kdr::Window::_initializeWindow()
 bool kdr::Window::_initializeOpenGLSettings()
 {
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
   glEnable(GL_BLEND);
 
+  glCullFace(GL_BACK);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glPointSize(5.f);
   glLineWidth(2.f);

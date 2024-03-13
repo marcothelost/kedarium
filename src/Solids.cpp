@@ -112,17 +112,23 @@ void kdr::Solids::Cuboid::render() const
 }
 
 GLuint planeIndices[] = {
-  0, 1, 3,
-  0, 3, 2,
+  0, 1, 3, // Top
+  0, 3, 2, // Top
+  6, 7, 5, // Bottom
+  6, 5, 4, // Bottom
 };
 
 kdr::Solids::Plane::Plane(const kdr::Space::Vec3& position, const float length, const float width) : kdr::Solids::Solid(position)
 {
   GLfloat planeVertices[] = {
-    -(length / 2.f), 0.f,  (width / 2.f), 1.f, 1.f, 1.f, 0.f,    0.f,   0.f, 1.f, 0.f, // 0 00 Top
-     (length / 2.f), 0.f,  (width / 2.f), 1.f, 1.f, 1.f, length, 0.f,   0.f, 1.f, 0.f, // 1 10 Top
-    -(length / 2.f), 0.f, -(width / 2.f), 1.f, 1.f, 1.f, 0.f,    width, 0.f, 1.f, 0.f, // 2 01 Top
-     (length / 2.f), 0.f, -(width / 2.f), 1.f, 1.f, 1.f, length, width, 0.f, 1.f, 0.f, // 3 11 Top
+    -(length / 2.f), 0.f,  (width / 2.f), 1.f, 1.f, 1.f, 0.f,    0.f,   0.f,  1.f, 0.f, // 0 010 Top
+     (length / 2.f), 0.f,  (width / 2.f), 1.f, 1.f, 1.f, length, 0.f,   0.f,  1.f, 0.f, // 1 110 Top
+    -(length / 2.f), 0.f, -(width / 2.f), 1.f, 1.f, 1.f, 0.f,    width, 0.f,  1.f, 0.f, // 2 011 Top
+     (length / 2.f), 0.f, -(width / 2.f), 1.f, 1.f, 1.f, length, width, 0.f,  1.f, 0.f, // 3 111 Top
+    -(length / 2.f), 0.f,  (width / 2.f), 1.f, 1.f, 1.f, 0.f,    0.f,   0.f, -1.f, 0.f, // 4 000 Bottom
+     (length / 2.f), 0.f,  (width / 2.f), 1.f, 1.f, 1.f, length, 0.f,   0.f, -1.f, 0.f, // 5 100 Bottom
+    -(length / 2.f), 0.f, -(width / 2.f), 1.f, 1.f, 1.f, 0.f,    width, 0.f, -1.f, 0.f, // 6 001 Bottom
+     (length / 2.f), 0.f, -(width / 2.f), 1.f, 1.f, 1.f, length, width, 0.f, -1.f, 0.f, // 7 101 Bottom
   };
   this->initializeMembers(planeVertices, sizeof(planeVertices), planeIndices, sizeof(planeIndices));
 }

@@ -30,6 +30,9 @@ void main()
   float specularFactor = pow(max(dot(viewDirection, reflectionDirection), 0.f), 32);
   vec3 specular = specularStrength * specularFactor * lightCol;
 
-  vec3 lightFactor = ambient + diffuse + specular;
+  float distance = length(lightPos - fragPos);
+  float attenuation = 1.f / (1.f * 0.1f * distance * 0.3f * (distance * distance));
+
+  vec3 lightFactor = (ambient + diffuse + specular) * attenuation;
   FragColor = vec4(lightFactor, 1.f) * texture(tex0, vertTex);
 }

@@ -133,8 +133,8 @@ class ExampleWindow : public kdr::Window
     };
     kdr::Solids::Plane plane {
       {0.f, 0.f, 0.f},
-      5.f,
-      5.f
+      20.f,
+      20.f
     };
     kdr::Solids::Mesh mesh {
       {0.f, 1.f, 0.f},
