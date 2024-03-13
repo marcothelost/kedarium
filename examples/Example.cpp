@@ -85,6 +85,9 @@ class ExampleWindow : public kdr::Window
     void render()
     {
       this->bindShader(defaultShader);
+      this->defaultShader.setVector3("lightPos", {0.f, 5.f, 0.f});
+      this->defaultShader.setVector3("lightCol", {1.f, 1.f, 1.f});
+      this->defaultShader.setVector3("camPos", this->getBoundCamera()->getPosition());
       this->bindTexture(testTexture);
       this->renderSolid(mesh);
       this->bindTexture(floorTexture);
