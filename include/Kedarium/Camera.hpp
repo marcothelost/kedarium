@@ -24,6 +24,7 @@ namespace kdr
       /**
        * @brief Constructs a camera with specified parameters.
        * 
+       * @param position The position of the camera.
        * @param fov The field of view angle in degrees.
        * @param bufferWidth The width of the rendering buffer.
        * @param bufferHeight The height of the rendering buffer.
@@ -32,10 +33,17 @@ namespace kdr
        * @param speed The movement speed of the camera.
        * @param sensitivity The mouse sensitivity of the camera.
        */
-      Camera(const float fov, const float bufferWidth, const float bufferHeight, const float zNear, const float zFar, const float speed, const float sensitivity)
-      : fov(fov), bufferWidth(bufferWidth), bufferHeight(bufferHeight), zNear(zNear), zFar(zFar), speed(speed), sensitivity(sensitivity)
+      Camera(const kdr::Space::Vec3& position, const float fov, const float bufferWidth, const float bufferHeight, const float zNear, const float zFar, const float speed, const float sensitivity)
+      : position(position), fov(fov), bufferWidth(bufferWidth), bufferHeight(bufferHeight), zNear(zNear), zFar(zFar), speed(speed), sensitivity(sensitivity)
       {}
 
+      /**
+       * @brief Gets the position of the camera.
+       * 
+       * @return The position of the camera.
+       */
+      kdr::Space::Vec3 getPosition() const
+      { return this->position; }
       /**
        * @brief Gets the field of view angle of the camera.
        * 
@@ -93,6 +101,13 @@ namespace kdr
       bool getLocked() const
       { return this->locked; }
 
+      /**
+       * @brief Sets the position of the camera.
+       * 
+       * @param position The new position of the camera.
+       */
+      void setPosition(const kdr::Space::Vec3& position)
+      { this->position = position; }
       /**
        * @brief Sets the field of view angle of the camera.
        * 
@@ -184,16 +199,16 @@ namespace kdr
       void applyMatrix(const GLuint shaderID, const std::string& uniformName);
 
     private:
-      float fov          {60.f};
-      float bufferWidth  {800.f};
-      float bufferHeight {800.f};
-      float zNear        {0.1f};
-      float zFar         {100.f};
-      float speed        {5.f};
-      float sensitivity  {10.f};
-      float aspect       {1.f};
+      kdr::Space::Vec3 position     {0.f, 0.f,  3.f};
+      float            fov          {60.f};
+      float            bufferWidth  {800.f};
+      float            bufferHeight {800.f};
+      float            zNear        {0.1f};
+      float            zFar         {100.f};
+      float            speed        {5.f};
+      float            sensitivity  {10.f};
+      float            aspect       {1.f};
 
-      kdr::Space::Vec3 position {0.f, 0.f,  3.f};
       kdr::Space::Vec3 front    {0.f, 0.f, -1.f};
       kdr::Space::Vec3 up       {0.f, 1.f,  0.f};
       kdr::Space::Mat4 matrix   {1.f};

@@ -129,12 +129,12 @@ class ExampleWindow : public kdr::Window
       16.f
     };
     kdr::Solids::Plane plane {
-      {0.f, -1.f, 0.f},
+      {0.f, 0.f, 0.f},
       5.f,
       5.f
     };
     kdr::Solids::Mesh mesh {
-      {0.f, 0.f, 0.f},
+      {0.f, 1.f, 0.f},
       "assets/Objects/sphere.obj"
     };
 };
@@ -146,6 +146,7 @@ int main()
 
   // Camera
   kdr::Camera camera {
+    {0.f, 1.f, 3.f},
     CAMERA_FOV,
     WINDOW_WIDTH,
     WINDOW_HEIGHT,
