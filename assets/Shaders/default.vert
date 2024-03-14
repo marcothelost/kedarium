@@ -20,7 +20,7 @@ void main()
 {
   vertCol = aCol;
   vertTex = aTex;
-  vertNorm = aNorm;
+  vertNorm = mat3(transpose(inverse(model))) * aNorm;
   fragPos = vec3(model * vec4(aPos, 1.f));
   gl_Position = cameraMatrix * model * vec4(aPos, 1.f);
 }

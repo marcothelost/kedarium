@@ -434,6 +434,17 @@ namespace kdr
       return result;
     }
     /**
+     * @brief Applies rotation to a 4x4 matrix.
+     * 
+     * This function rotates the given matrix by the specified angle around the specified axis.
+     * 
+     * @param mat The matrix to rotate.
+     * @param angle The angle of rotation in degrees.
+     * @param axes The axis of rotation.
+     * @return The rotated matrix.
+     */
+    kdr::Space::Mat4 rotate(const kdr::Space::Mat4& mat, const float angle, const kdr::Space::Vec3& axes);
+    /**
      * @brief Creates an orthographic projection matrix.
      * 
      * @param left The left coordinate of the projection volume.

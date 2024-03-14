@@ -56,11 +56,21 @@ class ExampleWindow : public kdr::Window
 
     void initialize()
     {
-      kdr::Lights::Light light {
+      this->lights.push_back(kdr::Lights::Light(
         {0.f, 2.f, 3.f},
         kdr::Color::White
-      };
-      this->lights.push_back(light);
+      ));
+      this->lights.push_back(kdr::Lights::Light(
+        {-3.f, 2.f, 3.f},
+        kdr::Color::Cyan
+      ));
+      this->lights.push_back(kdr::Lights::Light(
+        {3.f, 2.f, 3.f},
+        kdr::Color::Magenta
+      ));
+
+      this->bindShader(&this->defaultShader);
+      this->useLights(this->lights);
     }
 
     void onResize()
@@ -74,6 +84,8 @@ class ExampleWindow : public kdr::Window
   protected:
     void update()
     {
+      this->object.rotateY(50.f * this->getDeltaTime());
+
       if (this->getBoundCamera() == NULL || !this->getBoundCamera()->getLocked())
       {
         return;
@@ -96,7 +108,6 @@ class ExampleWindow : public kdr::Window
     void render()
     {
       this->bindShader(&defaultShader);
-      this->useLights(lights);
       this->bindTexture(stoveTexture);
       this->renderSolid(object);
       this->bindTexture(marbleTexture);
@@ -158,7 +169,7 @@ class ExampleWindow : public kdr::Window
       "assets/Objects/stove.obj"
     };
     kdr::Solids::Cuboid wall {
-      {0.f, 1.5f, -0.5f},
+      {0.f, 1.5f, -0.6f},
       6.f,
       3.f,
       0.2f
