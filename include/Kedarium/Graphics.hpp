@@ -55,10 +55,21 @@ namespace kdr
         { return this->ID; }
 
         /**
-         * @brief Sets a vector3 uniform in the shader.
+         * @brief Sets an integer uniform in the shader.
          * 
          * @param uniform The name of the uniform variable.
-         * @param vec The vector3 value to set.
+         * @param value The integer value to set.
+         */
+        void setInt(const std::string& uniform, const int value)
+        {
+          GLuint intLoc = glGetUniformLocation(this->ID, uniform.c_str());
+          glUniform1i(intLoc, value);
+        }
+        /**
+         * @brief Sets a Vector3 uniform in the shader.
+         * 
+         * @param uniform The name of the uniform variable.
+         * @param vec The Vector3 value to set.
          */
         void setVector3(const std::string& uniform, const kdr::Space::Vec3& vec)
         {

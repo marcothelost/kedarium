@@ -85,6 +85,7 @@ bool kdr::Object::loadFromObj(const std::string& objPath, std::vector<GLfloat>& 
 
         while (std::getline(tripletStream, value, '/'))
         {
+          if (value == "") continue;
           faceData.push_back(std::stoi(value));
         }
       }

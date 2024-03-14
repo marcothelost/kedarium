@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <vector>
 #include <string>
 
 #include "Core.hpp"
@@ -229,14 +230,25 @@ namespace kdr
         element.applyPosition(this->boundShader->getID(), "position");
         element.render();
       }
-      void useLight(const kdr::Lights::Light& light)
+      /**
+       * @brief Applies multiple lights to the currently bound shader program.
+       * 
+       * @param lights A vector containing the lights to apply.
+       */
+      void useLights(std::vector<kdr::Lights::Light>& lights)
       {
         if (this->boundShader == NULL)
         {
           return;
         }
-        light.apply(this->boundShader->getID(), "lightPos", "lightCol");
-        this->boundShader->setVector3("camPos", this->getBoundCamera()->getPosition());
+        int index = 0;
+        for (kdr::Lights::Light& light : lights)
+        {
+          light.apply(this->boundShader->getID(), index, "lightPos", "lightCol");
+          index++;
+        }
+        this->boundShader->setVector3("camPos", this->getBoundCamera()->getPosition()); 
+        this->boundShader->setInt("lightCount", lights.size()); 
       }
 
     protected:

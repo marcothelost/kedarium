@@ -1,7 +1,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
 #include <stdlib.h>
+#include <iostream>
+#include <vector>
 #include <string>
 
 #include "Kedarium/Core.hpp"
@@ -53,6 +54,15 @@ class ExampleWindow : public kdr::Window
       this->defaultShader.Delete();
     }
 
+    void initialize()
+    {
+      kdr::Lights::Light light {
+        {0.f, 2.f, 3.f},
+        kdr::Color::White
+      };
+      this->lights.push_back(light);
+    }
+
     void onResize()
     {
       this->crosshair.setPosition({
@@ -86,9 +96,11 @@ class ExampleWindow : public kdr::Window
     void render()
     {
       this->bindShader(&defaultShader);
-      this->useLight(light);
-      this->bindTexture(testTexture);
+      this->useLights(lights);
+      this->bindTexture(stoveTexture);
       this->renderSolid(object);
+      this->bindTexture(marbleTexture);
+      this->renderSolid(wall);
       this->bindTexture(floorTexture);
       this->renderSolid(plane);
       this->bindShader(&guiShader);
@@ -103,18 +115,24 @@ class ExampleWindow : public kdr::Window
       "assets/Shaders/default.vert",
       "assets/Shaders/default.frag"
     };
-    kdr::Graphics::Shader guiShader {
+    kdr::Graphics::Shader guiShader {+
       "assets/Shaders/gui.vert",
       "assets/Shaders/gui.frag"
     };
-    kdr::Graphics::Texture testTexture {
-      "assets/Textures/test.png",
+    kdr::Graphics::Texture stoveTexture {
+      "assets/Textures/stove.png",
       GL_TEXTURE_2D,
       GL_TEXTURE0,
       GL_UNSIGNED_BYTE
     };
     kdr::Graphics::Texture floorTexture {
-      "assets/Textures/floor.png",
+      "assets/Textures/tiles.png",
+      GL_TEXTURE_2D,
+      GL_TEXTURE0,
+      GL_UNSIGNED_BYTE
+    };
+    kdr::Graphics::Texture marbleTexture {
+      "assets/Textures/marble_tiles.png",
       GL_TEXTURE_2D,
       GL_TEXTURE0,
       GL_UNSIGNED_BYTE
@@ -135,15 +153,18 @@ class ExampleWindow : public kdr::Window
       20.f,
       20.f
     };
-    kdr::Solids::Pyramid object {
-      {0.f, 1.f, 0.f},
-      1.f,
-      2.f
+    kdr::Solids::Mesh object {
+      {0.f, 0.f, 0.f},
+      "assets/Objects/stove.obj"
     };
-    kdr::Lights::Light light {
-      {0.f, 5.f, 0.f},
-      kdr::Color::Red
+    kdr::Solids::Cuboid wall {
+      {0.f, 1.5f, -0.5f},
+      6.f,
+      3.f,
+      0.2f
     };
+
+    std::vector<kdr::Lights::Light> lights;
 };
 
 int main()
@@ -171,6 +192,9 @@ int main()
   };
   window.setClearColor(kdr::Color::Black);
   window.bindCamera(&camera);
+
+  // Initializing the Window
+  window.initialize();
 
   // Clear Color
   kdr::Color::RGBA clearColor {kdr::Color::Black};

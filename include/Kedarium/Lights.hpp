@@ -28,16 +28,25 @@ namespace kdr
         {}
 
         /**
-         * @brief Applies the light properties to the specified shader program.
+         * @brief Gets the position of the light.
+         * 
+         * @return The position of the light.
+         */
+        kdr::Space::Vec3 getPosition() const
+        { return this->position; }
+
+        /**
+         * @brief Applies the light properties (position and color) for a specific index in an array to the specified shader program.
          * 
          * @param shaderID The ID of the shader program.
-         * @param positionUniform The name of the uniform variable for the light position.
-         * @param colorUniform The name of the uniform variable for the light color.
+         * @param index The index of the light in the array.
+         * @param positionUniform The base name of the uniform variable for the light position in the array.
+         * @param colorUniform The base name of the uniform variable for the light color in the array.
          */
-        void apply(const GLuint shaderID, const std::string& positionUniform, const std::string& colorUniform) const
+        void apply(const GLuint shaderID, const unsigned int index, const std::string& positionUniform, const std::string& colorUniform) const
         {
-          GLuint lightPosLoc = glGetUniformLocation(shaderID, positionUniform.c_str());
-          GLuint lightColLoc = glGetUniformLocation(shaderID, colorUniform.c_str());
+          GLuint lightPosLoc = glGetUniformLocation(shaderID, (positionUniform + "[" + std::to_string(index) +"]").c_str());
+          GLuint lightColLoc = glGetUniformLocation(shaderID, (colorUniform + "[" + std::to_string(index) +"]").c_str());
 
           glUniform3f(lightPosLoc, this->position.x, this->position.y, this->position.z);
           glUniform3f(lightColLoc, this->color.red, this->color.green, this->color.blue);
