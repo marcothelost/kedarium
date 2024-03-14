@@ -1,7 +1,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
 #include <stdlib.h>
+#include <iostream>
+#include <vector>
 #include <string>
 
 #include "Kedarium/Core.hpp"
@@ -12,6 +13,8 @@
 #include "Kedarium/Keys.hpp"
 #include "Kedarium/Camera.hpp"
 #include "Kedarium/Solids.hpp"
+#include "Kedarium/Lights.hpp"
+#include "Kedarium/GUI.hpp"
 #include "Kedarium/Debug.hpp"
 
 // Window Settings
@@ -21,7 +24,6 @@ const     std::string  WINDOW_TITLE  {"GLFW"};
 
 // Camera Settings
 constexpr float CAMERA_FOV         {60.f};
-constexpr float CAMERA_ASPECT      {(float)WINDOW_WIDTH / WINDOW_HEIGHT};
 constexpr float CAMERA_NEAR        {0.1f};
 constexpr float CAMERA_FAR         {100.f};
 constexpr float CAMERA_SPEED       {3.f};
@@ -53,11 +55,37 @@ class ExampleWindow : public kdr::Window
     }
 
     void initialize()
-    {}
+    {
+      this->lights.push_back(kdr::Lights::Light(
+        {0.f, 2.f, 3.f},
+        kdr::Color::White
+      ));
+      this->lights.push_back(kdr::Lights::Light(
+        {-3.f, 2.f, 3.f},
+        kdr::Color::Cyan
+      ));
+      this->lights.push_back(kdr::Lights::Light(
+        {3.f, 2.f, 3.f},
+        kdr::Color::Magenta
+      ));
+
+      this->bindShader(&this->defaultShader);
+      this->useLights(this->lights);
+    }
+
+    void onResize()
+    {
+      this->crosshair.setPosition({
+        (float)this->getWidth() / 2.f - 8.f,
+        (float)this->getHeight() / 2.f - 8.f
+      });
+    }
 
   protected:
     void update()
     {
+      this->object.rotateY(50.f * this->getDeltaTime());
+
       if (this->getBoundCamera() == NULL || !this->getBoundCamera()->getLocked())
       {
         return;
@@ -79,11 +107,18 @@ class ExampleWindow : public kdr::Window
 
     void render()
     {
-      this->bindShader(defaultShader);
-      this->bindTexture(testTexture);
-      this->renderSolid(mesh);
+      this->bindShader(&defaultShader);
+      this->bindTexture(stoveTexture);
+      this->renderSolid(object);
+      this->bindTexture(marbleTexture);
+      this->renderSolid(wall);
       this->bindTexture(floorTexture);
       this->renderSolid(plane);
+      this->bindShader(&guiShader);
+      this->use2D();
+      this->bindTexture(crosshairTexture);
+      this->renderElement(crosshair);
+      this->bindShader(&defaultShader);
     }
 
   private:
@@ -91,27 +126,56 @@ class ExampleWindow : public kdr::Window
       "assets/Shaders/default.vert",
       "assets/Shaders/default.frag"
     };
-    kdr::Graphics::Texture testTexture {
-      "assets/Textures/test.png",
+    kdr::Graphics::Shader guiShader {+
+      "assets/Shaders/gui.vert",
+      "assets/Shaders/gui.frag"
+    };
+    kdr::Graphics::Texture stoveTexture {
+      "assets/Textures/stove.png",
       GL_TEXTURE_2D,
       GL_TEXTURE0,
       GL_UNSIGNED_BYTE
     };
     kdr::Graphics::Texture floorTexture {
-      "assets/Textures/floor.png",
+      "assets/Textures/tiles.png",
       GL_TEXTURE_2D,
       GL_TEXTURE0,
       GL_UNSIGNED_BYTE
     };
+    kdr::Graphics::Texture marbleTexture {
+      "assets/Textures/marble_tiles.png",
+      GL_TEXTURE_2D,
+      GL_TEXTURE0,
+      GL_UNSIGNED_BYTE
+    };
+    kdr::Graphics::Texture crosshairTexture {
+      "assets/Textures/crosshair.png",
+      GL_TEXTURE_2D,
+      GL_TEXTURE0,
+      GL_UNSIGNED_BYTE
+    };
+    kdr::GUI::Element crosshair {
+      {(float)WINDOW_WIDTH / 2.f - 8.f, (float)WINDOW_HEIGHT / 2.f - 8.f},
+      16.f,
+      16.f
+    };
     kdr::Solids::Plane plane {
-      {0.f, -1.f, 0.f},
-      5.f,
-      5.f
-    };
-    kdr::Solids::Mesh mesh {
       {0.f, 0.f, 0.f},
-      "assets/Objects/sphere.obj"
+      20.f,
+      20.f
     };
+    kdr::Solids::Mesh object {
+      {0.f, 0.f, 0.f},
+      "assets/Objects/stove.obj"
+    };
+    kdr::Solids::Cuboid wall {
+      {0.f, 1.5f, -0.6f},
+      6.f,
+      3.f,
+      0.2f
+    };
+
+    std::vector<kdr::Lights::Light> lights;
 };
 
 int main()
@@ -121,8 +185,10 @@ int main()
 
   // Camera
   kdr::Camera camera {
+    {0.f, 1.f, 3.f},
     CAMERA_FOV,
-    CAMERA_ASPECT,
+    WINDOW_WIDTH,
+    WINDOW_HEIGHT,
     CAMERA_NEAR,
     CAMERA_FAR,
     CAMERA_SPEED,

@@ -4,9 +4,14 @@ void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
   kdr::Window* windowInstance = (kdr::Window*)glfwGetWindowUserPointer(window);
 
+  windowInstance->setWidth(width);
+  windowInstance->setHeight(height);
+  windowInstance->onResize();
+
   if (windowInstance->getBoundCamera() != NULL)
   {
-    windowInstance->getBoundCamera()->setAspect((float)width / height);
+    windowInstance->getBoundCamera()->setBufferWidth((float)width);
+    windowInstance->getBoundCamera()->setBufferHeight((float)height);
   }
   glViewport(
     0,
@@ -87,7 +92,12 @@ bool kdr::Window::_initializeWindow()
 bool kdr::Window::_initializeOpenGLSettings()
 {
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_BLEND);
+  glEnable(GL_MULTISAMPLE);
 
+  glCullFace(GL_BACK);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glPointSize(5.f);
   glLineWidth(2.f);
 
@@ -112,7 +122,7 @@ void kdr::Window::_updateDeltaTime()
 
 void kdr::Window::_updateCamera()
 {
-  if (this->boundShaderID == 0 || this->boundCamera == NULL) {
+  if (this->boundShader == NULL || this->boundCamera == NULL) {
     return;
   }
 
@@ -143,8 +153,6 @@ void kdr::Window::_updateCamera()
 
   this->boundCamera->handleMouse(this->glfwWindow);
   this->boundCamera->handleKeyboard(this->glfwWindow, this->deltaTime);
-  this->boundCamera->updateMatrix();
-  this->boundCamera->applyMatrix(this->boundShaderID, "cameraMatrix");
 }
 
 void kdr::Window::_update()
@@ -158,6 +166,7 @@ void kdr::Window::_update()
 void kdr::Window::_render()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  this->use3D();
   this->render();
   glfwSwapBuffers(this->glfwWindow);
 }

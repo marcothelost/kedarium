@@ -102,8 +102,9 @@ kdr::Graphics::Texture::Texture(const std::string& pngPath, GLenum type, GLenum 
   glActiveTexture(slot);
   this->Bind();
 
-  glTexParameteri(this->type, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(this->type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(this->type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(this->type, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameterf(this->type, GL_TEXTURE_LOD_BIAS, -1.f);
 
   glTexImage2D(
     this->type,
@@ -117,6 +118,7 @@ kdr::Graphics::Texture::Texture(const std::string& pngPath, GLenum type, GLenum 
     imgData
   );
   glGenerateMipmap(this->type);
+  glTexParameterf(this->type, GL_TEXTURE_MAX_ANISOTROPY_EXT, 4.f);
 
   delete imgData;
   this->Unbind();

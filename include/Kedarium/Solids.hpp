@@ -56,6 +56,27 @@ namespace kdr
         {
           this->model = kdr::Space::translate(this->model, vec);
         }
+        /**
+         * @brief Rotates the solid object around the X-axis by the given angle.
+         * 
+         * @param degrees The angle of rotation in degrees.
+         */
+        void rotateX(const float degrees)
+        { this->model = kdr::Space::rotate(this->model, degrees, {1.f, 0.f, 0.f}); }
+        /**
+         * @brief Rotates the solid object around the Y-axis by the given angle.
+         * 
+         * @param degrees The angle of rotation in degrees.
+         */
+        void rotateY(const float degrees)
+        { this->model = kdr::Space::rotate(this->model, degrees, {0.f, 1.f, 0.f}); }
+        /**
+         * @brief Rotates the solid object around the Z-axis by the given angle.
+         * 
+         * @param degrees The angle of rotation in degrees.
+         */
+        void rotateZ(const float degrees)
+        { this->model = kdr::Space::rotate(this->model, degrees, {0.f, 0.f, 1.f}); }
 
         /**
          * @brief Applies the model matrix to the shader program.

@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <vector>
 #include <string>
 
 #include "Core.hpp"
@@ -12,6 +13,8 @@
 #include "Keys.hpp"
 #include "Camera.hpp"
 #include "Solids.hpp"
+#include "Lights.hpp"
+#include "GUI.hpp"
 
 namespace kdr
 {
@@ -89,12 +92,12 @@ namespace kdr
       float getDeltaTime() const
       { return this->deltaTime; }
       /**
-       * @brief Gets the ID of the shader bound to the window.
+       * @brief Gets the shader currently bound to the window.
        *
-       * @return The ID of the bound shader.
+       * @return A pointer to the bound shader.
        */
-      GLuint getBoundShaderID() const
-      { return this->boundShaderID; }
+      kdr::Graphics::Shader* getBoundShader() const
+      { return this->boundShader; }
       /**
        * @brief Gets the camera bound to the window.
        *
@@ -103,6 +106,20 @@ namespace kdr
       kdr::Camera* getBoundCamera() const
       { return this->boundCamera; }
 
+      /**
+       * @brief Sets the width of the window.
+       * 
+       * @param width The new width of the window.
+       */
+      void setWidth(const float width)
+      { this->width = width; }
+      /**
+       * @brief Sets the height of the window.
+       * 
+       * @param height The new height of the window.
+       */
+      void setHeight(const float height)
+      { this->height = height; }
       /**
        * Sets the clear color for the window.
        * 
@@ -120,6 +137,12 @@ namespace kdr
       }
 
       /**
+       * @brief Virtual function called when the window is resized.
+       */
+      virtual void onResize()
+      {}
+
+      /**
        * @brief Maximizes the window.
        */
       void maximize();
@@ -127,16 +150,34 @@ namespace kdr
        * @brief Unmaximizes the window.
        */
       void unmaximize();
+      /**
+       * @brief Switches the rendering mode to 2D.
+       */
+      void use2D()
+      {
+        if (this->boundCamera == NULL || this->boundShader == NULL) return;
+        this->boundCamera->updateMatrix2D();
+        this->boundCamera->applyMatrix(this->boundShader->getID(), "cameraMatrix");
+      }
+      /**
+       * @brief Switches the rendering mode to 3D.
+       */
+      void use3D()
+      {
+        if (this->boundCamera == NULL || this->boundShader == NULL) return;
+        this->boundCamera->updateMatrix3D();
+        this->boundCamera->applyMatrix(this->boundShader->getID(), "cameraMatrix");
+      }
 
       /**
        * @brief Binds a shader to the window.
        * 
-       * @param shader The shader object to bind.
+       * @param shader A pointer to the shader object to bind.
        */
-      void bindShader(const kdr::Graphics::Shader& shader)
+      void bindShader(kdr::Graphics::Shader* shader)
       {
-        this->boundShaderID = shader.getID();
-        shader.Use();
+        this->boundShader = shader;
+        shader->Use();
       }
       /**
        * @brief Binds a texture to the window.
@@ -145,11 +186,11 @@ namespace kdr
        */
       void bindTexture(const kdr::Graphics::Texture& texture)
       {
-        if (boundShaderID == 0)
+        if (this->boundShader == NULL)
         {
           return;
         }
-        texture.TextureUnit(this->boundShaderID, "tex0", 0);
+        texture.TextureUnit(this->boundShader->getID(), "tex0", 0);
         texture.Bind();
       }
       /**
@@ -168,23 +209,59 @@ namespace kdr
        */
       void renderSolid(const kdr::Solids::Solid& solid)
       {
-        if (boundShaderID == 0)
+        if (this->boundShader == NULL)
         {
           return;
         }
-        solid.applyModelMatrix(this->boundShaderID, "model");
+        solid.applyModelMatrix(this->boundShader->getID(), "model");
         solid.render();
+      }
+      /**
+       * @brief Renders a GUI element.
+       * 
+       * @param element The GUI element to render.
+       */
+      void renderElement(const kdr::GUI::Element& element)
+      {
+        if (this->boundShader == NULL)
+        {
+          return;
+        }
+        element.applyPosition(this->boundShader->getID(), "position");
+        element.render();
+      }
+      /**
+       * @brief Applies multiple lights to the currently bound shader program.
+       * 
+       * @param lights A vector containing the lights to apply.
+       */
+      void useLights(std::vector<kdr::Lights::Light>& lights)
+      {
+        if (this->boundShader == NULL)
+        {
+          return;
+        }
+        int index = 0;
+        for (kdr::Lights::Light& light : lights)
+        {
+          light.apply(this->boundShader->getID(), index, "lightPos", "lightCol");
+          index++;
+        }
+        this->boundShader->setVector3("camPos", this->getBoundCamera()->getPosition()); 
+        this->boundShader->setInt("lightCount", lights.size()); 
       }
 
     protected:
       /**
        * @brief Virtual function to update the window state.
        */
-      virtual void update() = 0;
+      virtual void update()
+      {}
       /**
        * @brief Virtual function to render the window contents.
        */
-      virtual void render() = 0;
+      virtual void render()
+      {}
 
     private:
       unsigned int width  {800};
@@ -197,10 +274,10 @@ namespace kdr
       float deltaTime {0.f};
       float lastTime  {(float)glfwGetTime()};
 
-      GLuint       boundShaderID   {0};
-      kdr::Camera* boundCamera     {NULL};
-      kdr::Key     cameraBindKey   {kdr::Key::E};
-      kdr::Key     cameraUnbindKey {kdr::Key::Escape};
+      kdr::Graphics::Shader* boundShader     {0};
+      kdr::Camera*           boundCamera     {NULL};
+      kdr::Key               cameraBindKey   {kdr::Key::E};
+      kdr::Key               cameraUnbindKey {kdr::Key::Escape};
 
       kdr::Key fullscreenKey     {kdr::Key::F};
       bool     fullscreenEnabled {false};

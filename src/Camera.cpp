@@ -69,7 +69,24 @@ void kdr::Camera::handleKeyboard(GLFWwindow* window, const float deltaTime)
   }
 }
 
-void kdr::Camera::updateMatrix()
+void kdr::Camera::updateMatrix2D()
+{
+  kdr::Space::Mat4 view       {1.f};
+  kdr::Space::Mat4 projection {1.f};
+
+  projection = kdr::Space::ortho(
+    0.f,
+    this->bufferWidth,
+    this->bufferHeight,
+    0.f,
+    -1.f,
+    1.f
+  );
+
+  this->matrix = projection * view;
+}
+
+void kdr::Camera::updateMatrix3D()
 {
   kdr::Space::Mat4 view       {1.f};
   kdr::Space::Mat4 projection {1.f};
