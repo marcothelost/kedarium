@@ -1,7 +1,15 @@
 \documentclass[11pt]{article}
 
+\usepackage[T1]{fontenc}
 \usepackage{geometry}
 \usepackage{graphicx}
+\usepackage{tocbibind}
+
+\makeatletter
+\renewcommand\tableofcontents{%
+	\@starttoc{toc}%
+}
+\makeatother
 
 \title{Kedarium}
 \author{Robin Patrik Sloup}
@@ -36,7 +44,30 @@
 	\end{minipage}
 	\vspace{2cm}
 	\begin{center}
-		Rokycany 2023
+		Rokycany 2024
 	\end{center}
 \end{titlepage}
+\section{Prohlášení}
+Prohlašuji, že jsem maturitní práci s názvem „Kedarium, Grafický Engine“ vypracoval(a) samostatně pod vedením Jitky Fürbacherové a uvedl(a) v seznamu literatury všechny použité literární a odborné
+zdroje. Dále prohlašuji, že citace použitých pramenů je úplná a že jsem v práci neporušil(a)
+autorská práva (ve smyslu zákona č. 121/2000 Sb. O právu autorském, o právech souvisejících
+s právem autorským).
+
+\vspace{22pt}
+\noindent
+V Rokycanech dne 11. 9. 2001
+\pagebreak
+\section{Poděkování}
+\pagebreak
+\section{Obsah}
+\tableofcontents
+\pagebreak
+\section{Abstrakt}
+\section{Úvod}
+\section{Analýza}
+\section{Imlplementace}
+\section{Testování}
+\section{Uživatelská příručka}
+\section{Závěr}
+\section{Seznam použité literatury}
 \end{document}
