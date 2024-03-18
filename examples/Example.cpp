@@ -126,7 +126,7 @@ class ExampleWindow : public kdr::Window
       "assets/Shaders/default.vert",
       "assets/Shaders/default.frag"
     };
-    kdr::Graphics::Shader guiShader {+
+    kdr::Graphics::Shader guiShader {
       "assets/Shaders/gui.vert",
       "assets/Shaders/gui.frag"
     };
