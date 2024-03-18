@@ -84,8 +84,6 @@ class ExampleWindow : public kdr::Window
   protected:
     void update()
     {
-      this->object.rotateY(50.f * this->getDeltaTime());
-
       if (this->getBoundCamera() == NULL || !this->getBoundCamera()->getLocked())
       {
         return;
@@ -206,9 +204,6 @@ int main()
 
   // Initializing the Window
   window.initialize();
-
-  // Clear Color
-  kdr::Color::RGBA clearColor {kdr::Color::Black};
 
   // Info Logs
   kdr::Core::printEngineInfo();
