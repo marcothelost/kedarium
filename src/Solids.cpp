@@ -198,8 +198,8 @@ void kdr::Solids::Pyramid::render() const
 
 kdr::Solids::Mesh::Mesh(const kdr::Space::Vec3& position, const std::string objPath) : kdr::Solids::Solid(position)
 {
-  std::vector<GLfloat> vertices {NULL};
-  std::vector<GLuint>  indices  {NULL};
+  std::vector<GLfloat> vertices;
+  std::vector<GLuint>  indices;
   GLsizeiptr verticesSize {0};
   GLsizeiptr indicesSize  {0};
 
