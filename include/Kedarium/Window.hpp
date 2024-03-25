@@ -182,16 +182,16 @@ namespace kdr
       /**
        * @brief Binds a texture to the window.
        * 
-       * @param texture The texture object to bind.
+       * @param texture A pointer to the texture object to bind.
        */
-      void bindTexture(const kdr::Graphics::Texture& texture)
+      void bindTexture(const kdr::Graphics::Texture* texture)
       {
-        if (this->boundShader == NULL)
+        if (this->boundShader == NULL || texture == NULL)
         {
           return;
         }
-        texture.TextureUnit(this->boundShader->getID(), "tex0", 0);
-        texture.Bind();
+        texture->TextureUnit(this->boundShader->getID(), "tex0", 0);
+        texture->Bind();
       }
       /**
        * @brief Binds a camera to the window.
