@@ -132,7 +132,7 @@ bool kdr::Object::loadFromObj(const std::string& objPath, std::vector<GLfloat>& 
     int texIndex = faceData.at(i * 3 + 1);
     int normIndex = faceData.at(i * 3 + 2);
 
-    vertices.push_back(vecVals.at((posIndex - 1) * 3) / length);
+    vertices.push_back(vecVals.at((posIndex - 1) * 3)     / length);
     vertices.push_back(vecVals.at((posIndex - 1) * 3 + 1) / height);
     vertices.push_back(vecVals.at((posIndex - 1) * 3 + 2) / width);
     vertices.push_back(1.f);

@@ -56,13 +56,10 @@ class ExampleWindow : public kdr::Window
 
     void initialize()
     {
-      kdr::Graphics::Texture a {
-        "assets/Textures/stove.png",
-        GL_TEXTURE_2D,
-        GL_TEXTURE0,
-        GL_UNSIGNED_BYTE
-      };
-      this->textureManager.add("stove", stoveTexture);
+      this->addTexture("stove", "assets/Textures/stove.png");
+      this->addTexture("floor", "assets/Textures/tiles.png");
+      this->addTexture("tiles", "assets/Textures/marble_tiles.png");
+      this->addTexture("crosshair", "assets/Textures/crosshair.png");
 
       this->lights.push_back(kdr::Lights::Light(
         {0.f, 2.f, 3.f},
@@ -114,15 +111,15 @@ class ExampleWindow : public kdr::Window
     void render()
     {
       this->bindShader(&defaultShader);
-      this->bindTexture(this->textureManager.get("stove"));
+      this->bindTexture("stove");
       this->renderSolid(object);
-      this->bindTexture(&marbleTexture);
+      this->bindTexture("tiles");
       this->renderSolid(wall);
-      this->bindTexture(&floorTexture);
+      this->bindTexture("floor");
       this->renderSolid(plane);
       this->bindShader(&guiShader);
       this->use2D();
-      this->bindTexture(&crosshairTexture);
+      this->bindTexture("crosshair");
       this->renderElement(crosshair);
       this->bindShader(&defaultShader);
     }
@@ -135,30 +132,6 @@ class ExampleWindow : public kdr::Window
     kdr::Graphics::Shader guiShader {
       "assets/Shaders/gui.vert",
       "assets/Shaders/gui.frag"
-    };
-    kdr::Graphics::Texture stoveTexture {
-      "assets/Textures/stove.png",
-      GL_TEXTURE_2D,
-      GL_TEXTURE0,
-      GL_UNSIGNED_BYTE
-    };
-    kdr::Graphics::Texture floorTexture {
-      "assets/Textures/tiles.png",
-      GL_TEXTURE_2D,
-      GL_TEXTURE0,
-      GL_UNSIGNED_BYTE
-    };
-    kdr::Graphics::Texture marbleTexture {
-      "assets/Textures/marble_tiles.png",
-      GL_TEXTURE_2D,
-      GL_TEXTURE0,
-      GL_UNSIGNED_BYTE
-    };
-    kdr::Graphics::Texture crosshairTexture {
-      "assets/Textures/crosshair.png",
-      GL_TEXTURE_2D,
-      GL_TEXTURE0,
-      GL_UNSIGNED_BYTE
     };
     kdr::GUI::Element crosshair {
       {(float)WINDOW_WIDTH / 2.f - 8.f, (float)WINDOW_HEIGHT / 2.f - 8.f},
@@ -182,7 +155,6 @@ class ExampleWindow : public kdr::Window
       0.2f
     };
 
-    kdr::Core::Manager<kdr::Graphics::Texture> textureManager;
     std::vector<kdr::Lights::Light> lights;
 };
 

@@ -170,6 +170,23 @@ namespace kdr
       }
 
       /**
+       * @brief Adds a texture to the texture manager.
+       * 
+       * @param name The name to associate with the texture.
+       * @param pngPath The path to the PNG file used to create the texture.
+       */
+      void addTexture(const std::string& name, const std::string& pngPath)
+      {
+        kdr::Graphics::Texture texture {
+          pngPath,
+          GL_TEXTURE_2D,
+          GL_TEXTURE0,
+          GL_UNSIGNED_BYTE
+        };
+        this->textures.add(name, texture);
+      }
+
+      /**
        * @brief Binds a shader to the window.
        * 
        * @param shader A pointer to the shader object to bind.
@@ -182,10 +199,11 @@ namespace kdr
       /**
        * @brief Binds a texture to the window.
        * 
-       * @param texture A pointer to the texture object to bind.
+       * @param name The name of the texture to bind.
        */
-      void bindTexture(const kdr::Graphics::Texture* texture)
+      void bindTexture(const std::string& name)
       {
+        kdr::Graphics::Texture* texture = this->textures.get(name);
         if (this->boundShader == NULL || texture == NULL)
         {
           return;
@@ -282,6 +300,8 @@ namespace kdr
       kdr::Key fullscreenKey     {kdr::Key::F};
       bool     fullscreenEnabled {false};
       bool     canUseFullscreen  {true};
+
+      kdr::Core::Manager<kdr::Graphics::Texture> textures;
 
       /**
        * @brief Initializes the window.
