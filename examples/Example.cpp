@@ -80,9 +80,9 @@ class ExampleWindow : public kdr::Window
 
     void onResize()
     {
-      this->crosshair.setPosition({
-        (float)this->getWidth() / 2.f - 8.f,
-        (float)this->getHeight() / 2.f - 8.f
+      this->crosshair.update({
+        (float)this->getWidth(),
+        (float)this->getHeight()
       });
     }
 
@@ -133,9 +133,8 @@ class ExampleWindow : public kdr::Window
       "assets/Shaders/gui.vert",
       "assets/Shaders/gui.frag"
     };
-    kdr::GUI::Element crosshair {
-      {(float)WINDOW_WIDTH / 2.f - 8.f, (float)WINDOW_HEIGHT / 2.f - 8.f},
-      16.f,
+    kdr::GUI::Crosshair crosshair {
+      {WINDOW_WIDTH, WINDOW_HEIGHT},
       16.f
     };
     kdr::Solids::Plane plane {

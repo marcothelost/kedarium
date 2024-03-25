@@ -70,6 +70,42 @@ namespace kdr
 
         kdr::Space::Vec2 position {0.f};
     };
+
+    /**
+     * @brief Represents a crosshair GUI element.
+     */
+    class Crosshair : public kdr::GUI::Element
+    {
+      public:
+        /**
+         * @brief Constructs a Crosshair object.
+         * 
+         * @param screenDimensions The dimensions of the screen.
+         * @param edgeLength The length of each edge of the crosshair.
+         */
+        Crosshair(const kdr::Space::Vec2& screenDimensions, const float edgeLength)
+        : kdr::GUI::Element({
+            screenDimensions.x / 2.f - edgeLength / 2.f,
+            screenDimensions.y / 2.f - edgeLength / 2.f,
+          }, edgeLength, edgeLength), edgeLength(edgeLength)
+        {}
+
+        /**
+         * @brief Updates the position of the crosshair.
+         * 
+         * @param screenDimensions The dimensions of the screen.
+         */
+        void update(const kdr::Space::Vec2& screenDimensions)
+        {
+          this->setPosition({
+            screenDimensions.x / 2.f - this->edgeLength / 2.f,
+            screenDimensions.y / 2.f - this->edgeLength / 2.f,
+          });
+        }
+
+      private:
+        float edgeLength {0.f};
+    };
   }
 }
 
