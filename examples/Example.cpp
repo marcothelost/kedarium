@@ -164,7 +164,8 @@ class ExampleWindow : public kdr::Window
     };
     kdr::Solids::Mesh object {
       {0.f, 0.f, 0.f},
-      "assets/Objects/stove.obj"
+      "assets/Objects/stove.obj",
+      {1.f, 10.f, 1.f}
     };
     kdr::Solids::Cuboid wall {
       {0.f, 1.5f, -0.6f},

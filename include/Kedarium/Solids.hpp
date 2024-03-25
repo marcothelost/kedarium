@@ -216,8 +216,9 @@ namespace kdr
          * 
          * @param position The position of the mesh in 3D space.
          * @param objPath The path to the OBJ file containing the mesh data.
+         * @param dimensions The dimensions of the mesh in 3D space, extracted from the OBJ file if not provided.
          */
-        Mesh(const kdr::Space::Vec3& position, const std::string objPath);
+        Mesh(const kdr::Space::Vec3& position, const std::string objPath, const kdr::Space::Vec3& dimensions = {0.f, 0.f, 0.f});
 
         /**
          * @brief Renders the mesh.
