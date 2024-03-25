@@ -2,13 +2,15 @@
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[czech]{babel}
+\usepackage{fvextra}
 \usepackage{csquotes}
+\usepackage[czech]{babel}
 \usepackage{caption}
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{minted}
 \usepackage{tocbibind}
 \usepackage{parskip}
 \usepackage{titlesec}
@@ -33,69 +35,37 @@
 \addbibresource{bibliography.bib}
 
 \captionsetup{font=small}
+\usemintedstyle{vs}
 
 \title{Kedarium}
 \author{Robin Patrik Sloup}
 
+\newboolean{isSOC}
+\setboolean{isSOC}{true}
+
 \begin{document}
-\begin{titlepage}
-	\begin{center}
-		{\Large Gymnázium a Střední Odborná Škola\par}
-		ul. Mládežníků 1115, Rokycany
-	\end{center}
-	\begin{center}
-		\vspace{1cm}
-		\includegraphics[height=3cm]{school-logo.png}\\
-	\end{center}
-	\vspace*{\fill}
-	\begin{center}
-		{\Huge \textbf{Kedarium,\\Grafický Engine}\par}
-		\vspace{0.3cm}
-		{\Large Maturitní Práce\par}
-		\vspace{1.5cm}
-	\end{center}
-	\vspace*{\fill}
-	\begin{center}
-		\begin{minipage}[t]{0.45\textwidth}
-			\centering
-			\textbf{Autor Práce:}\\
-			Robin Patrik Sloup
-		\end{minipage}%
-		\begin{minipage}[t]{0.45\textwidth}
-			\centering
-			\textbf{Vedoucí Práce:}\\
-			Mgr. Jitka Fürbacherová
-		\end{minipage}
-	\end{center}
-	\vspace{2cm}
-	\begin{center}
-		Rokycany 2024
-	\end{center}
-	\thispagestyle{empty}
-\end{titlepage}
-\setcounter{page}{2}
-\section*{Prohlášení}
-Prohlašuji, že jsem maturitní práci s názvem „Kedarium, Grafický Engine“ vypracoval samostatně pod vedením Mgr. Jitky Fürbacherové a uvedl v seznamu literatury všechny použité literární a odborné
-zdroje. Dále prohlašuji, že citace použitých pramenů je úplná a že jsem v práci neporušil
-autorská práva (ve smyslu zákona č. 121/2000 Sb. O právu autorském, o právech souvisejících
-s právem autorským).
+\ifthenelse{\boolean{isSOC}}{
+    \include{pages/soc_title}
+}{
+    \include{pages/maturita_title}
+}
+\ifthenelse{\boolean{isSOC}}{
+    \setcounter{page}{3}
+}{
+    \setcounter{page}{2}
+}
 
-\vspace{24pt}
-\noindent
-V Rokycanech dne 11. 9. 2001
-\pagebreak
-
-\section*{Poděkování}
-
-Mé poděkování patří Mgr. Jitce Fürbacherové za odborné vedení, ochotu a trpělivost, kterou mi v průběhu zpracování maturitní práce věnovala. Dále děkuji Jakubu Trnčákovi za pomoc při testování práce na systému MacOS.
-
-\pagebreak
+\ifthenelse{\boolean{isSOC}}{
+    \include{pages/soc_statement}
+}{
+    \include{pages/maturita_statement}
+}
+\include{pages/thanks}
+\include{pages/annotation}
 
 \section*{Obsah}
 \tableofcontents
 \pagebreak
-
-\section*{Abstrakt}
 
 \pagebreak
 
@@ -125,7 +95,7 @@ Pro realizaci práce je nutné správně zvolit grafické rozhraní, programovac
 
 Na konci této kapitoly se zaměřím na popis matematických konceptů, jež budou pro vhodné řešení využity. Tyto koncepty se využívají primárně pro práci s prostorem. Nalézají ale i jiná využití — více o nich si povíme v kapitole implementace.
 
-\subsection{Volba grafického rozhraní}
+\subsection{Volba grafického rozhraní} \label{g_interface}
 
 Grafické rozhraní můžeme považovat za střední bod mezi našimi instrukcemi v programu a samotnou grafickou kartou, která má na starost vykreslování grafiky v daném zařízení. Grafické karty mohou mít různé výrobce, samotný výrobce distribuuje různé modely, řady, verze, apod., a tedy odlišný způsob, jak danou instrukci musí karta vykonat. Ne každý grafický čip umožňuje vykonat danou instrukci, popřípadě ne na stejné úrovni.
 
@@ -143,7 +113,7 @@ Jako poslední představím DirectX. DirectX je kolekce proprietárních rozhran
 
 Můj cíl je vytvořit multiplatformní grafický engine, čemuž ne zcela vyhovuje API DirectX. Rozhodování je tedy mezi Vulkanem a OpenGL. Práci tvořím sám a tvorba řešení a implementace by s Vulkanem trvala značně déle. Dále také nevyžaduji pokročilé funkce, které Vulkan nabízí. Mou finální volbou se tedy stává OpenGL. Ačkoliv je považováno za zastaralé, nabízí i moderní verze, které se i dnes používají nejen v herním průmyslu. Má rozsáhlou komunitu a podporu, proto ho i přes zdánlivou zastaralost považuji za vhodné řešení.
 
-\subsection{OpenGL}
+\subsection{OpenGL} \label{opengl}
 
 OpenGL je standard, který nám dává možnost interagovat s daty, vykreslováním a zpracováním grafiky, bez ohledu na hardware zařízení. Slouží čistě pro práci s grafickou kartou a neřeší např. tvorbu okna, získání vstupu z klávesnice, načítání obrázků nebo načítání modelů. První verzi OpenGL vytvořila americká firma Silicon
 Graphics Computer Systems v roce 1994. Nachází využití v mnoha průmyslech, ať už herním, věděckém nebo zdravotním. Funguje na bázi grafické pipeline — seřazený postup operací, který nám ze vstupních dat tvoří vizualizaci na obrazovce. Grafickou pipeline bychom mohli přirovnat k výrobní lince, kde každý její segment má pevně daný úkol, a na konci vzniká výsledný produkt.\cite{Shreiner_2013}
@@ -151,7 +121,7 @@ Graphics Computer Systems v roce 1994. Nachází využití v mnoha průmyslech, 
 \vspace{0.5cm}
 \begin{figure}[h]
     \centering
-    \includegraphics[width=10cm]{opengl_pipeline.png}
+    \includegraphics[width=10cm]{images/opengl_pipeline.png}
     \caption[Grafická pipeline OpenGL]{Grafická pipeline OpenGL \cite{pipeline_img}}
     \label{fig:Grafická pipeline OpenGL}
 \end{figure}
@@ -188,7 +158,7 @@ Okno je prvkem GUI (Graphical User Interface)\cite{gui}, grafického uživatelsk
 \vspace{0.5cm}
 \begin{figure}[h]
     \centering
-    \includegraphics[width=10cm]{xp_window.png}
+    \includegraphics[width=10cm]{images/xp_window.png}
     \caption[Okno programu MS Word v operačním systému Windows XP]{Okno programu MS Word v operačním systému Windows XP \cite{xp_window}}
     \label{fig:Okno programu MS Word v operačním systému Windows XP}
 \end{figure}
@@ -202,7 +172,7 @@ Kameru si můžeme představit jako digitální oči programů pracujících s v
 \vspace{0.5cm}
 \begin{figure}[h]
     \centering
-    \includegraphics[width=14cm]{camera.png}
+    \includegraphics[width=14cm]{images/camera.png}
     \caption[Jednoduchý nákres fungování kamery]{Jednoduchý nákres fungování kamery \cite{camera_img}}
     \label{fig:Jednoduchý nákres fungování kamery}
 \end{figure}
@@ -216,7 +186,7 @@ Nyní zavedu grafický pojem, který je specifický pro naše vybrané grafické
 \vspace{0.5cm}
 \begin{figure}[h]
     \centering
-    \includegraphics[height=6cm]{vbo.png}
+    \includegraphics[height=6cm]{images/vbo.png}
     \caption{Příklad VBO s daty}
     \label{fig:Příklad VBO s daty}
 \end{figure}
@@ -230,7 +200,7 @@ S VBO úzce souvisí Element Buffer Object, zkráceně EBO. Ten seskupuje data o
 \vspace{0.5cm}
 \begin{figure}[h]
     \centering
-    \includegraphics[height=6cm]{ebo.png}
+    \includegraphics[height=6cm]{images/ebo.png}
     \caption{Příklad EBO s daty}
     \label{fig:Příklad EBO s daty}
 \end{figure}
@@ -258,21 +228,21 @@ Textura je zpravidla dvourozměrný obrázek (v některých případech může m
 \vspace{0.5cm}
 \begin{figure}[h]
     \centering
-    \includegraphics[height=10cm]{texture_example.png}
+    \includegraphics[height=10cm]{images/texture_example.png}
     \caption{Ukázka textury zdi}
     \label{fig:Ukázka textury zdi}
 \end{figure}
 
 Na Obrázku \ref{fig:Ukázka textury zdi} vidíme kvádr, který má texturu dlaždiček. Na první pohled tak působí, že se skutečně skládá z několika stovek kostiček, ve skutečnosti se jedná jen o obrázek, dodávající tento dojem. Při tvorbě scény musíme zvážit, jaký pocit má dávat uživateli. Jaký materiál by byl pro těleso vhodný? Jak detailní by samotná textura měla být? Při volbě textury je nutné zvolit takovou texturu, která nebude nevyčnívat a bude dostatečně realistická.
 
-\subsubsection{Světlo}
+\subsubsection{Světlo} \label{light}
 
 Světlo je nejdůležitějším konceptem, který stojí za vizuální reprezentací čehokoliv, co může člověk vnímat. Ve skutečnosti nevidíme samotná tělesa, nýbrž paprsky světla, které se od těles odráží. Paprsky se mohou dále odrážet, být pohlceny nebo projít tělesem. Simulovat tento proces je ale výkonově vysoce náročné, a přestože s moderními grafickými čipy to možné je, pro naše účely práce nám bude stačit jednodušší řešení. Samotné světlo může mít několik druhů; ty nyní přiblížím. \cite{light}
 
 \vspace{0.5cm}
 \begin{figure}[h]
     \centering
-    \includegraphics[height=6cm]{light_img.jpeg}
+    \includegraphics[height=6cm]{images/light_img.jpeg}
     \caption[Různé druhy světel]{Různé druhy světel \cite{light_img}}
     \label{fig:Různé druhy světel}
 \end{figure}
@@ -296,7 +266,7 @@ GUI, jak již zaznělo Graphical User Interface, je druhem uživatelského rozhr
 \vspace{0.5cm}
 \begin{figure}[h]
     \centering
-    \includegraphics[height=9cm]{gui.png}
+    \includegraphics[height=9cm]{images/gui.png}
     \caption[Ukázka různých prvků GUI]{Ukázka různých prvků GUI \cite{gui_img}}
     \label{fig:Ukázka různých prvků GUI}
 \end{figure}
@@ -308,7 +278,7 @@ Jak tedy může komunikovat program s uživatelem skrze GUI? Tuto interakci čas
 \vspace{0.5cm}
 \begin{figure}[h]
     \centering
-    \includegraphics[height=7cm]{minecraft.png}
+    \includegraphics[height=7cm]{images/minecraft.png}
     \caption[Snímek obrazovky ze hry Minecraft]{Snímek obrazovky ze hry Minecraft \cite{minecraft_img}}
     \label{Snímek obrazovky ze hry Minecraft}
 \end{figure}
@@ -321,7 +291,7 @@ V dolní části Obrázku \ref{Snímek obrazovky ze hry Minecraft} vidíme lišt
 
 Při tvorbě programu, který pracuje s prostorem, potřebujeme definovat samotný prostor a operace s ním popsat tak, aby jim program rozuměl. Touto problematikou se zabývá lineární algebra. Lineární algebra je odvětví matematiky, které rozvíjí algebru samotnou. Umožňuje nám práci s takzvanými vektory a vektorovým prostorem. lineárními transformacemi a soustavami lineárních rovnic. \cite{linear_algebra} Nyní popíši hlavní komponenty lineární algebry, které je pro správnou implementaci programu nutné pochopit.
 
-\subsubsection{Vektor}
+\subsubsection{Vektor} \label{vector}
 
 Vektor představuje veličinu, jenž má směr a velikost. Vektor si můžeme představit jako šipku o dané délce (velikosti) s konkrétním směrem. Jedná se o soubor seřazených hodnot. Vektory zapisujeme malými písmeny se šipkou nad písmenem ($\vec{a}$). Také je lze zapsat jako názvy bodů bez mezer s šipkou nad ($\vec{AB}$). \cite{vector}
 
@@ -351,7 +321,7 @@ Považujme pozici kamery za bod $A$ a cílový bod za bod $B$, pak směrový vek
 \vspace{0.5cm}
 \begin{figure}[h]
     \centering
-    \includegraphics[height=2.5cm]{vector_sub.png}
+    \includegraphics[height=2.5cm]{images/vector_sub.png}
     \caption{Směrový vektor $\vec{AB}$}
     \label{fig:Směrový vektor AB}
 \end{figure}
@@ -403,7 +373,7 @@ V tomto vzorci opět $n$ představuje počet dimenzí vektoru, přičemž platí
 \vspace{0.5cm}
 \begin{figure}[h]
     \centering
-    \includegraphics[height=3cm]{cross_product.png}
+    \includegraphics[height=3cm]{images/cross_product.png}
     \caption[Vektorový součin dvou vektorů]{Vektorový součin dvou vektorů \cite{gui_img}}
     \label{fig:Vektorový součin dvou vektorů}
 \end{figure}
@@ -522,59 +492,359 @@ Všechny předešlé operace pro práci s maticemi byly vcelku intuitivní. Vět
 \end{equation}
 \begin{figure}[h]
     \centering
-    \includegraphics[height=4.2cm]{matrix_mp.png}
+    \includegraphics[height=4.2cm]{images/matrix_mp.png}
     \caption[Vizualizace násobení matic]{Vizualizace násobení matic \cite{matrix_mp_img}}
     \label{fig:Vizualizace násobení matic}
 \end{figure}
 \section{Implementace}
 
-V této kapitole se zabývám implementací konceptů, které jsem vysvětlil v kapitole předešlé. Vypíši, jaké externí knihovny jsou využity pro jaké funkce, na jakém principu fungují jednotlivé části kódu a popíši, jak probíhal jejich vývoj. V sekci také budou ukázky kódu vysvětlovaných částí. V následující kapitole rozvedu, jak jsem fungování implementace testoval.
-
+V této kapitole se zabývám implementací konceptů, které jsem vysvětlil v kapitole předešlé. Vypíši, jaké externí knihovny jsou využity pro jaké funkce, na jakém principu fungují jednotlivé části kódu a popíši, jak probíhal jejich vývoj. V sekci také budou ukázky kódu vysvětlovaných částí.
 \subsection{Externí knihovny}
+
+Engine využívá několik externích knihoven pro své fungování. Pro připomenutí, knihovna je již hotový kód, který řeší daný problém. Důvodem je praktičnost, neboť tvorba enginu bez jakýkoliv dalších knihoven, který bude podporován více platformami naráz, by byla velmi zdlouhavá. Kvalitně řešit některé problémy by znamenalo mít rozsáhlé zkušenosti s OpenGL, jeho implementačními detaily, správou oken na různých operačních systémech či s různými datovými formáty. Snažím se o nejmenší počet externích knihoven, abych mohl mít co nejvíce vlastních, ovlivnitelných částí; v projektu jsou takovéto knihovny tři:
+
+\begin{enumerate}
+    \item GLFW \cite{glfw} — knihovna pro multiplatformní tvorbu a správu okna.
+    \item GLEW \cite{glew} — knihovna pro načtení OpenGL funkcí.
+    \item libPNG \cite{libpng} — knihovna pro načítání obrázků ve formátu PNG.
+\end{enumerate}
+
+Jedná se o velmi rozšířené knihovny, které se při tvorbě enginů v jazyce C++ často využívají. GLFW podporuje i další grafická rozhraní mimo OpenGL, např. Vulkan či OpenGL ES, o kterých jsem již mluvil v kapitole \ref{g_interface}. Nejen že podporuje více grafických rozhraní, podporuje i více operačních systémů a display serverů. GLEW nám řekne, kde najít jakou OpenGL funkci a díky němu jich tak můžeme využívat. Také je schopné detekovat schopnosti platformy, na které engine spouštíme. Můžeme tak dynamicky optimalizovat či upravit logiku dle zařízení uživatele.
+
+Knihovna libPNG, jak z názvu vyplývá, řeší čtení a zápis ve formátu PNG. PNG je zkratka pro Portable Network Graphics pro ukládání rastrových obrázků. Tento formát podporuje různé velikosti barevných palet (ta ovlivňuje, kolik může obrázek používat barev naráz), kompresi dat, pro úspornější využití místa disku či průhlednost. Knihovna je pro příklad schopna obrázek načíst jako skupinu bytů, zjistit jeho rozměry (výšku a šířku), zda obrázek využívá průhlednost nebo zjistit jeho barevnou paletu. Samotná historie knihovny libPNG sahá až do roku 1995.
 
 \subsection{Build systém}
 
+C++ musíme zkompilovat (převést) do spustitelného kódu. Tohoto docílíme jiným programem — compilerem. Úkolem compileru je právě převádění zdrojového kódu (který píše programátor) na kód zdrojový (pro počítač). Mezi rozšířené compilery pro tento jazyk patří g++ \cite{gnu_gcc}, LLVM \cite{llvm} či MSVC \cite{msvc}. Compiler není závislý na implementaci, není tedy pro práci nutné konkrétní compiler volit. Kdybychom chtěli spouštět kód, museli bychom se dobře naučit s compilerem, říct mu, kde najde jakou knihovnu, soubory a s jakými nastaveními má kód budovat. Automatizování tohoto procesu by bez speciální logiky fungovalo pouze pro danou platformu. Řešením je využívání build systému — systému určený pro budování aplikací.
+
+Jeden z nástrojů automatizace jsou takzvané Makefiles \cite{makefile}. Jedná se o soubory, které generalizují kompilační proces a projekt se nám pak dle těchto požadavků zpracuje. Prakticky nám tak stačí využívat Makefiles pro budování projektu s podporou více compilerů. Build systémy nám umožňují jednodušší práci s Makefiles a jejich snadnou správu. Příkladem je build systém CMake \cite{cmake}, který používá své vlastní soubory pro tvorbu Makefiles. Tento systém je využit mou prací, neboť je velmi rozšířen a podporován. Také mohu lépe řešit logiku detekce operačního systému uživatele při tvorbě programu, než kdybych používal Makefiles samotné.
+
+\vspace{0.5cm}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=3.5cm]{images/fs.png}
+    \caption{Ukázka CMake souborů v projektu}
+    \label{fig:Ukázka CMake souborů v projektu}
+\end{figure}
+
+\pagebreak
+
+Na Obrázku \ref{fig:Ukázka CMake souborů v projektu} vidíme, jak jsou v projektu soubory pro CMake rozloženy. Tyto soubory se vždy jmenují "CMakeLists.txt". Jeden tento soubor je přímo v kořenovém adresáři projektu. Ten odkazuje na CMake soubory v jednotlivých složkách projektu. Jedná se o soubor ve složce \mintinline{bash}{/src}, kde se nachází zdrojový kód knihovny. Podobný je soubor ve složce \mintinline{bash}{/examples}, kde jsou ukázkové příklady knihovny. Důležitá je i složka \mintinline{bash}{/include}, kde se nacházejí externí knihovny a knihovna enginu. Po spuštění CMake vytvářím složku \mintinline{bash}{/build}, kde se nachází vygenerovaný Makefile. Z něho se následně tvoří spustitelná aplikace, pro ukázku:
+
+\vspace{0.5cm}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=5.5cm]{images/fs_2.png}
+    \caption{Ukázka CMake souborů v projektu po buildu}
+    \label{fig:Ukázka CMake souborů v projektu po buildu}
+\end{figure}
+
 \subsection{Okno}
+
+Pro logiku okna jsem vytvořil vlastní třídu, ze které si následně uživatel tvoří třídu děděnou. Tato třída obsahuje parametry jako titulek, šířku, výšku, GLFW instanci okna či odkaz na jeho aktivní kameru. Pro parametry třídy jsou definovány i gettery a settery pro jejich úpravy či získání. Některé metody jsou přímo určeny pro implementaci potomky třídy. Jedná se například o metody \mintinline{cpp}{update} a \mintinline{cpp}{render}.
+
+Tato třída také spravuje takzvaný delta time — čas uplynutý mezi snímky \cite{delta_time}. Představme si, že na obrazovce nám běhá postavička. Ta by měla běžet rychlostí $10$. Každý snímek tak ujde právě 10 pixelů. Co když mám ale pomalé zařízení či monitor s vyšší zobrazovací frekvencí? Výsledky se pak mohou několiknásobně lišit. Při násobení rychlost $10$ hodnotou delta time tento rozdíl odstraňujeme.
+
+\vspace{0.5cm}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=7cm]{images/window_code.png}
+    \caption{Zjednodušený kód třídy Window}
+    \label{fig:Zjednodušený kód třídy Window}
+\end{figure}
+
+Na Obrázku \ref{fig:Zjednodušený kód třídy Window} vidíme zjednodušený kód pro tuto třídu. Tento obrázek jsem tvořil pomocí online nástroje Carbon pro tvorbu obrázků kódu \cite{carbon}. Třída však obsahuje i další logiku, kupříkladu pro maximalizaci a minimalizaci okna. Jak vidíme, okno má zmíněné metody \mintinline{cpp}{update} a \mintinline{cpp}{render}, dále pak metodu \mintinline{cpp}{loop}, která spustí hlavní cyklus (střídání aktualizace a vykreslování) a metodu \mintinline{cpp}{close} pro zavření okna. Potom této třídy by mohl vypadat následovně:
+
+\vspace{0.5cm}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=5.5cm]{images/window_child_code.png}
+    \caption{Zjednodušená dědičná třída z Window}
+    \label{fig:Zjednodušená dědičná třída z Window}
+\end{figure}
+
+\pagebreak
+
+Jak vidíme na obrázku \ref{fig:Zjednodušená dědičná třída z Window}, třída nevychází přímo z \mintinline{cpp}{Window} ale z \mintinline{cpp}{kdr::Window}. Jednotlivé moduly enginy jsou uvnitř namespace (představme si ho jako balíček) se zkratkou \mintinline{cpp}{kdr} (zkráceně Kedarium). Důvodem jsou kolize pojmenování při integrace do existujícího projektu. Pokud by měl vývojář vlastní třídu pro správu okna, pak by byli v jeho projektu 2 třídy \mintinline{cpp}{Window}. Namespace tyto problémy řeší a tento princip nacházíme ve všech částech enginu.
 
 \subsection{Správa vstupu}
 
+Pro interakci uživatele s programem je nutné od něj získávat vstup. Správu vstupu v okně řeší používaná knihovna GLFW. Pro unsnadnění práce jsem si vytvořil enumeraci pro jednotlivé klávesy, což je množina předem definovaných hodnot. \cite{enum} Dále má engine funkci, která nám říká, zda je zvolená klávesa aktuálně stisknutá. Zde je ukázka této enumerace a funkce:
+
+\vspace{0.5cm}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=4cm]{images/keys.png}
+    \caption{Ukázka enumerace pro klávesy a funkce s ní spojená}
+    \label{fig:Ukázka enumerace pro klávesy a funkce s ní spojená}
+\end{figure}
+
+Na Obrázku \ref{fig:Ukázka enumerace pro klávesy a funkce s ní spojená} vidíme enumeraci \mintinline{cpp}{Key}, která je využita i ve funkci \mintinline{cpp}{isKeyPressed}. Tato funkce vrací booleovskou hodnotu dle toho, zda je zvolená klávesa v dané GLFW instanci stisknuta. Mohli bychom ji například využít v metodě \mintinline{cpp}{update} ve třídě \mintinline{cpp}{Window} pro rotaci nějakého tělesa. V ukázkových příkladech ji využívám pro změnu módu vykreslování, zvětšení aplikace na celé okno či zamknutí kurzoru myši.
+
+\pagebreak
+
 \subsection{Barvy}
+
+V mé práci abstrahuji barvy do vlastní struktury. Struktura nám seskupuje více informací do jednoho celku. Její součástí ale není chování, čímž se zásadně liší od třídy. \cite{struct} Pro barvu se hodí, neboť barvu lze popsat kombinací několika hodnot. Zde je ukázka, jak vypadá struktura RGBA, která právě tento formát barvy reprezentuje:
+
+\vspace{0.5cm}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=7cm]{images/rgba.png}
+    \caption{Struktura RGBA v enginu}
+    \label{fig:Struktura RGBA v enginu}
+\end{figure}
+
+Tato struktura má 4 hodnoty, jak můžeme vidět na Obrázku \ref{fig:Struktura RGBA v enginu}. Jedná se o sílu barvy červené, zelené a modré, pak o její průhlednost. V konstruktoru mají barvy datový typ \mintinline{cpp}{uint8_t}, který reprezentuje osmi-bitovou hodnotu (0 - 255). Kdybychom zvolili jiný typ, např. \mintinline{cpp}{int}, mohli bychom do konstruktoru vložit i jinou hodnotu, než v tomto rozmezí.
+
+Poslední hodnotou, jak bylo zmíněno, můžeme změnit průhlednost. Tato hodnota je reprezentována datovým typem \mintinline{cpp}{float} a jedná se o desetinné číslo v intervalu $[0; 1]$. Součástí enginu jsou i některé předem definované barvy, abychom nemuseli některé často používané barvy definovat sami. Příkladem může být \mintinline{cpp}{kdr::Color::Black} nebo \mintinline{cpp}{kdr::Color::Red}.
+
+\pagebreak
 
 \subsection{Shadery}
 
+Shadery jsem již zmiňoval v kapitole \ref{opengl}, kde se zabývám OpenGL. Jedná se o malé programy, které mění vstup na výstup v jednotlivých fázích pipeline OpenGL. Pro shader jsem vytvořil vlastní třídu, která shader přečte ze specifikovaných souborů (ty třída dostane jako cesty k nim), spustí nutné OpenGL funkce. Programátorovi dává metody pro aktivaci, mazání a úprav hodnot shaderu. Zde je jeho zjednodušená verze:
+
+\vspace{0.5cm}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=9cm]{images/shader.png}
+    \caption{Třída Shader}
+    \label{fig:Třída Shader}
+\end{figure}
+
+Vidíme zde metody \mintinline{cpp}{Use} a \mintinline{cpp}{Delete}, které shader aktivují a mažou. Na ukázku jsem pro obrázek ponechal metodu \mintinline{cpp}{setInt}, které v shaderu nastaví celočíslenou hodnotu. OpenGL musí vědět, kde danou hodnotu najde a díky metodám pro nastavování hodnot nemusí vývojář využívat OpenGL funkce pro získání jejich lokací. Stačí mu pouze znát, jak hodnotu v souboru s kódem pro shader pojmenoval. Každý shader má také ID, jenž získá při jeho vytvoření.
+
+\pagebreak
+
 \subsection{VAO, VBO a EBO}
+
+VAO, VBO a EBO mají stejně jako shadery vlastní třídy, které práci s nimi usnadňují. Důvodem, proč jsou ve stejné kapitole je, že tyto tři koncepty spolu velmi úzce souvisí a fungují na podobných principech. Stejně jako shader, jedním z jejich parametrů je jejich ID, vygenerované OpenGL při jejich tvorbě. Dále mají tři společné metody, pro jejich aktivaci, deaktivaci a smazání. Pro ukázku začnu uvedením zjednodušeného kódu pro VBO a EBO, které jsou si velmi podobné a liší se pouze v detailech:
+
+\vspace{0.5cm}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=12.5cm]{images/vbo_ebo.png}
+    \caption{Třídy VBO a EBO}
+    \label{fig:Třídy VBO a EBO}
+\end{figure}
+
+\pagebreak
+
+Na Obrázku \ref{fig:Třídy VBO a EBO} vidíme, že se tyto třídy téměř neliší. V úvodu této kapitoly jsem zmiňoval metody pro práci s nimi — jde o metody \mintinline{cpp}{Use}, \mintinline{cpp}{Unbind} a \mintinline{cpp}{Delete}. Při tvorbě VBO musíme do jejího konstruktoru předat pole s daty o vrcholech typu \mintinline{cpp}{GLfloat} (OpenGL typ pro desetinná čísla) a pak velikost tohoto pole. Důvodem předání velikosti pole je, že v programovacích jazycích C a C++ se pole při přidání ve funkci mění na ukazatel na něj. Stejným způsobem pak tvoříme instance EBO, předáváme ale pole s hodnotami typu \mintinline{cpp}{GLuint} (OpenGL typ pro nezáporné celé číslo). Jedná se o instrukce pro vykreslení trojúhelníků.
+
+Třída VAO je podobná, obsahuje ale navíc metodu pro zavedení atributů (např. pozice či barva) a při její tvorbě žádné parametry nepředáváme. Zjednodušená třída vypadá následovně:
+
+\vspace{0.5cm}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=10cm]{images/vao.png}
+    \caption{Třída VAO}
+    \label{fig:Třídy VAO}
+\end{figure}
+
+\pagebreak
+
+Instance VAO mají své ID, metody \mintinline{cpp}{Use}, \mintinline{cpp}{Unbind} a \mintinline{cpp}{Delete}, navíc ale i metodu \mintinline{cpp}{LinkAttrib}. Ta jako své parametry vyžaduje odkaz na VBO, se kterým pracujeme, pořadí atributu, kolik hodnot zabírá atribut (např. 3 hodnoty), datový typ atributu, po kolika hodnotách se opakuje a kolik bytů je odsazen od začátku hodnot ve VBO. Jinak se se třídou VAO pracuje stejně, jako s třídami předchozími.
+
+S použitím tříd VAO, VBO a EBO můžeme snadno využívat data o různorodých plochách a tělesech. Ať už jde o jednoduchý čtverec či komplexní model o řádech tisíců trojúhelníků. Pro představu, jak tyto třídy využívat nyní uvedu i příklad v kódu. Je ale nutné dodat, že proměnné \mintinline{cpp}{vrcholy}, \mintinline{cpp}{velikostVrcholu}, \mintinline{cpp}{indexy} a \mintinline{cpp}{velikostIndexu} musíme považovat, za již definované, neboť by jinak ukázka byla poměrně zdlouhavá a komplikující pochopení.
+
+\vspace{0.5cm}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=11cm]{images/vao_vbo_ebo_example.png}
+    \caption{Použití tříd VAO, VBO a EBO}
+    \label{fig:Použití tříd VAO, VBO a EBO}
+\end{figure}
+
+\pagebreak
 
 \subsection{Práce s prostorem}
 
+Pro práci s prostorem jsem definoval několik tříd. Pro vektory jsou definovány třídy \mintinline{cpp}{Vec2} a \mintinline{cpp}{Vec3}. Z názvu lze usoudit, že první třída je pro vektor dvoudimenzionální, druhá pro vektor třídimenzionální. V praxi využívám 2D vektory při práci s pozicováním GUI na obrazovce. 3D vektory jsou využívány pro pozicování a pohyb s tělesy v prostoru. Další třídou je pak \mintinline{cpp}{Mat4}, představující matici s řádem $4 \times 4$. Jiné třídy nebylo potřeba definovat, neboť už jen tyto tři nám otevírají spoustu možností.
+
+Pro vektory jsou definovány operace, které jsem popisoval i v kapitole \ref{vector} při analýze — sčítání, odčítání, násobení skalárem, skalární součin a vektorový součin (ten je definován jen pro třídu \mintinline{cpp}{Vec3}). U některých těchto funkcí využívám funkcionality C++, která se nazývá operator overloading. Ta nám umožňuje přidat speciální interakce třídám s existujícími operátory (+, -, +=, ...). Nemusím tak tvořit funkce či metody pro implementaci některých operací, mohu přidat interakce s existujícími operátory. \cite{operator_overloading} Třídu \mintinline{cpp}{Vec3} a overloading operátorů nyní představím na příkladu:
+
+\vspace{0.5cm}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=4cm]{images/overloading.png}
+    \caption{Třída Vec3 a její sčítání}
+    \label{fig:Třída Vec3 a její sčítání}
+\end{figure}
+
+Jak vidíme na Obrázku \ref{fig:Třída Vec3 a její sčítání}, nevyužívám pro součet žádné metody či funkce. Kód je tak čitelnější a operace s vektory pak intuitivnější. Pro třídu \mintinline{cpp}{Mat4} je pak přidána funkcionalitě operátoru \mintinline{cpp}{[]}. Ten slouží pro získání hodnoty z pole. Bylo již zmíněno, že matice je souborem hodnot, který lze členit do řádek a sloupců. To se velmi nápadně podobá dvourozměrným polím. Problémem je, že \mintinline{cpp}{Mat4} je třída, takže pro získání hodnoty bychom standardně museli využívat funkcionality, která by mohla připomínat: \mintinline{cpp}{matice.getValue(1, 1)}, \mintinline{cpp}{matice.values[1][1]} či \mintinline{cpp}{matice.value(1, 1)}. Začnu představením, jak třída vypadá:
+
+\pagebreak
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=8cm]{images/mat.png}
+    \caption{Třída Mat4}
+    \label{fig:Třída Mat4}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[height=8cm]{images/lookat_mat.png}
+    \caption{Výpočet matice pro pohled kamery}
+    \label{fig:Výpočet matice pro pohled kamery}
+\end{figure}
+
+\pagebreak
+
+Jako první vidíme na obrázku \ref{fig:Třída Mat4} zjednodušenou třídu \mintinline{cpp}{Mat4}. Na Obrázku \ref{fig:Výpočet matice pro pohled kamery} pak vidíme využití trigonometrických funkcí a také funkce enginu pro výpočty skalárního a vektorového součinu. Výsledkem je matice, která nám popisuje pohled kamery daným směrem z dané pozice. Pomocí operator overloadingu mohu k prvkům matice přistupovat, jako bych přistupoval přímo k poli, tedy \mintinline{cpp}{matice[1][1]}. Je zde zastoupena i funkce pro normalizaci vektorů.
+
 \subsection{Tělesa}
+
+Engine také poskytuje vlastní třídy pro různá tělesa. Nejdůležitější třídou tohoto module je třída \mintinline{cpp}{Solid}, ze které všechna ostatní tělesa díky dědičnosti vycházejí. S~tělesy můžeme díky maticím a vektorům manipulovat, například posunem či rotací. Díky dědičnosti lze tyto operace provádět na všech dalších tělesech. Popis těles začnu uvedením minimalistické ukázky zmíněné třídy \mintinline{cpp}{Solid}:
+
+\vspace{0.5cm}
+\begin{figure}[!h]
+    \centering
+    \includegraphics[height=9.5cm]{images/solid.png}
+    \caption{Zjednodušená třída Solid}
+    \label{fig:Zjednodušená třída Solid}
+\end{figure}
+
+Každé těleso má své VAO, VBO a EBO, jak lze vidět na obrázku \ref{fig:Zjednodušená třída Solid}. V enginu z této třídy vycházejí například třídy: \mintinline{cpp}{Cube}, \mintinline{cpp}{Cuboid}, \mintinline{cpp}{Pyramid} či \mintinline{cpp}{Mesh}, která slouží pro využívání vlastních modelů, jenž jsou čteny z Wavefront OBJ \cite{wavefront} souborů. Všechny data o vrcholech těles jsou ve stejném formátu — obsahují pozici, barvu vrcholu, souřadnice textury a normálový vektor pro bod.
 
 \subsection{Uživatelské rozhraní}
 
+Pro prvky uživatelského rozhraní je určen modul \mintinline{cpp}{GUI}. V něm se nachází třída \mintinline{cpp}{Element}. Tato třída je velmi podobná zmíněné třídě \mintinline{cpp}{Solid}. Má své VAO, VBO a EBO, pozici a metodu pro její vykreslení. Takto vypadá zjednodušený kód této třídy:
+
+\vspace{0.5cm}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=7cm]{images/element.png}
+    \caption{Třída Element}
+    \label{fig:Třída Element}
+\end{figure}
+
+Z ní můžeme tvořit další třídy (např. pro lištu či ukazatel životů) nebo využívat přímo třídu \mintinline{cpp}{Element}. Na obrázku \ref{fig:Třída Element} vidíme, že narozdíl od třídy \mintinline{cpp}{Solid} však využívá dvoudimenzionální vektory a neobsahuje funkce pro rotaci. Informace o vrcholech obsahují méně informací, než u těles; konkrétně jde jen o pozici a souřadnice textury. V praxi využívám tuto třídu pro vytvoření crosshairu (mířítka ve středu obrazovky). Instance této třídy jsou cílené pro vykreslování ve 2D režimu, v případě omylného vykreslení ve 3D režimu se vykreslí jako plocha v prostoru.
+
 \subsection{Světlo}
+
+Pro světlo jsem vytvořil třídu \mintinline{cpp}{Light}, která popisuje barvu a pozici světla. Tato třída je určena k tomu, aby z ní byly vytvořené podtřídy, představující různé typy světla. Implementace aktuálně využívá pouze bodové světlo, které bylo vysvětleno v kapitole \ref{light} během analýzy. Zde je ukázka, jak třída \mintinline{cpp}{Light} vypadá:
+
+\vspace{0.5cm}
+\begin{figure}[h]
+    \centering
+    \includegraphics[height=7cm]{images/light.png}
+    \caption{Třída Light}
+    \label{fig:Třída Light}
+\end{figure}
+
+Tato třída, jak vidíme na Obrázku \ref{fig:Třída Light}, má svůj parametr pro barvu a pozici. Obsahuje také metodu, která umožňuje aplikovat světlo v shaderu a využívat ho tak při renderování.
 
 \subsection{Čtení ze souborů}
 
-\subsection{Třída Manager}
+Součástí enginu jsou také 2 moduly, které pracují se soubory. Jedná se o moduly \mintinline{cpp}{File} a \mintinline{cpp}{Image}. Jako první popíši, jak funguje modul \mintinline{cpp}{File}. Ten slouží pro získání obsahu jakéhokoliv souboru. Využívá se například pro čtení kódů pro shadery. Lze ho využít i pro jiné účely, dle potřeb programátora. Jedno z potencionálních využití by mohlo představovat čtení konfiguračních souborů. Funkce pro čtení souborů vypadá takto:
+
+\vspace{0.5cm}
+\begin{figure}[!h]
+    \centering
+    \includegraphics[height=6cm]{images/file.png}
+    \caption{Funkce pro čtení souborů}
+    \label{fig:Funkce pro čtení souborů}
+\end{figure}
+
+Funkce si jako parametr bere cestu k souboru, jenž chceme číst. Pokud soubor existuje, vrátí nám jeho obsah jako textový řetěz, v jiném případě pak vrací řetězec prázdný. Společně s prázdným řetězcem se pak do konzole vypíše chyba, že soubor s danou cestou k němu neexistuje.
+
+Druhým modulem pro práci se soubory je modul \mintinline{cpp}{Image}. Ten slouží pro čtení souborů ve formátu PNG za pomocí knihovny libPNG. Získá nám data obrázku, jeho šířku, výšku a informaci o tom, zda obrázek obsahuje průhlednost. Náhled této funkce nebudu uvádět, neboť je poměrně rozsáhlá, obsahuje několik částí pro kontrolu chyb a také funkcí knihovny libPNG. Implementaci lze ale nalézt v souboru \mintinline{cpp}{/src/Image.cpp}.
 
 \subsection{Integrace pro debugging}
 
-\section{Testování}
+Při práci s prostorem často potřebujeme vědět, s jakými daty aktuálně pracujeme nebo jaký je výsledek našich operací. Engine poskytuje modul \mintinline{cpp}{Debug}, který umožňuje vypsat si obsah vektoru či matice. Při testování a řešení problémů je to velmi užitečný nástroj, díky kterému vývojář nemusí řešit výpis hodnot sám. Takto vypadá využití funkce pro výpis matice:
+
+\vspace{0.5cm}
+\begin{figure}[!h]
+    \centering
+    \includegraphics[height=5.5cm]{images/matrix_debug.png}
+    \caption{Výpis obsahu matice}
+    \label{fig:Výpis obsahu matice}
+\end{figure}
+
+Jak vidíme na Obrázku \ref{fig:Výpis obsahu matice} byla zvolena jednotková matice (ta má na diagonále všechny hodnoty rovné právě jedné). Podobná funkce je v enginu dostupná pod názvem \mintinline{cpp}{kdr::Debug::printVector}, která do jedná řádky vypíše složky vektoru.
 
 \section{Uživatelská příručka}
 
-\subsection{Windows}
+V této sekci popisuji, jak kód budovat a spouštět na různých operačních systémech. Po vybudování ukázkového příkladu můžeme engine otestovat. Ovládání ukázkového příkladu je následovné:
 
-\subsection{MacOS}
+\begin{enumerate}
+    \item E - zamkne myš, můžeme tak otáčet a hýbat kamerou
+    \item Escape - odemkne myš
+    \item C - změní zobrazovací režim na body
+    \item V - změní zobrazovací režim na hrany
+    \item B - změní zobrazovací režim na plochy
+    \item WSAD - pohyb v prostoru
+    \item F - zapnutí a vypnutí fullscreen režimu
+\end{enumerate}
 
 \subsection{Linux}
 
+Pro spuštění a vybudování kódu na operačním systému Linux budeme potřebovat několik balíčků na našem systému. S vysokou pravděpodobností nástroj \mintinline{bash}{make} již máme na systému nainstalován, přesto ho uvedu do instalačních příkazů. Dále budeme potřebovat nástroj CMake, který byl v práci již popsán. Na systému musí být rovněž nainstalován C++ compiler, např. g++. Jejich instalace se liší na bázi distribuce Linuxu, zde ale uvádím příkazy pro nejčastější distribuce:
+
+\noindent\textbf{Debian/Ubuntu}:\\
+\mintinline{bash}{sudo apt install cmake make g++}
+
+\noindent\textbf{Fedora}:\\
+\mintinline{bash}{sudo dnf install cmake make gcc-c++}
+
+\noindent\textbf{Arch/Manjaro}:\\
+\mintinline{bash}{sudo pacman -S cmake make gcc}
+
+Máme-li tyto nástroje, můžeme v kořenovém adresáři přidat povolení budovacího skriptu. Pokud jsme vše provedli správně, vytvoří se nám spustitelná aplikace na této cestě (vůči kořenovému adresáři projektu): \mintinline{bash}{./build/examples/example}. Proces buildu a spuštění vypadá takto:
+
+\vspace{0.5cm}
+\begin{figure}[!h]
+    \centering
+    \includegraphics[height=3.5cm]{images/build.png}
+    \caption{Vybudování a spuštění aplikace}
+    \label{fig:Vybudování a spuštění aplikace}
+\end{figure}
+
+\subsection{Windows}
+
+Pro kompilaci a budování přímo pro plaformu Windows aktuálně není návod, neboť Windows vyžaduje bez využití platformy Visual Studio a pouze CMake komplikované linkování DLL souborů. To ale neznamená, že kód na Windows nelze spustit a budovat. Můžeme si stáhnout WSL (Windows Subsystem For Linux) a používat tak Windows, jako bychom využívali nějakou Linuxovou distribuci. Pak je proces stejný, jako při budování na Linuxu.
+
+Microsoft poskytuje oficiální návod, jak WSL instalovat a využívat na tomto odkazu:
+\mintinline{bash}{https://learn.microsoft.com/en-us/windows/wsl/install}
+
+\subsection{MacOS}
+
+Kompilace na MacOS je velice podobná, jako kompilace na Linuxu; obojí jsou to totiž *NIX systémy. Stejně jako u Linuxu se musíme ujistit, že na systému jsou instalovány balíčky potřebné pro kompilaci. MacOS má svůj vlastní manager balíčků, který se nazývá Homebrew. Potřebné balíčky nainstalujeme takto:
+
+\noindent\mintinline{bash}{sudo brew install make cmake gcc glew glfw libpng}
+
+Dále je nutné nastavit některé proměnné prostředí (máte-li Homebrew nainstalován jinde, je třeba cestu k němu zaměnit):
+
+\noindent\mintinline{bash}{export CPATH=/opt/homebrew/include}\\
+\noindent\mintinline{bash}{export LIBRARY_PATH=/opt/homebrew/lib}
+
+Následně je proces identický, jako pro platformu Linux. Uděláme buildovací skript spustitelným, spustíme ho a aplikaci najdeme na stejné cestě, jako na Linuxu.
+
+\pagebreak
+
 \section{Závěr}
+
+Vytvořil jsem engine, který abstrahuje práci s grafickými koncepty. Umožňuje vývoj pro více platforem a nabízí tak vývojářům jednoduchý nástroj pro tvorbu her, animací či různých vizualizací. Díky tomu, že je kód důsledně komentován a funkce jsou systematicky pojmenovávány, je práce snadno rozšiřitelná. Jednotlivé metody a funkce jsou systematicky pojmenovávány a tak i snadno pochopitelné.
+
+Zmíněnými rozšířeními by mohla být implementace více typů světel, podpora vykreslování textu na obrazovku či načítání scén ze souboru. Moderní hardware nám dává základ pro vývoj velmi pokročilých aplikací; umožňuje nám ale i snáze tolerovat nevýkonnost aplikací. Rozdíl v jednotkách desítek či stovek MB využití v paměti jsou dnes poměrně zanedbatelné, několik desítek let zpět by se ale jednalo o extrémní skok. Jako další zlepšení bych také uvedl lepší kompilaci na systému Windows a distribuci .exe souborů.
+
+Práce může posloužit rovněž také pro zamyšlení, zda pro jednoduché hry potřebujeme používat profesionální herní enginy, ve kterých vyvíjí komplexní hry velká studia o stovkách vývojářů. Engine šetří desítky hodin programátorů, které by musely trávit studiem grafických rozhraní a následnou implementací, přičemž jim neříká, jak implementovat logiku a řešení svého problému.
+
+Mně osobně engine dal také mnoho zkušeností se správou kódu a prohloubil mé znalosti matematiky. Konkrétně mi výrazně pomohl pochopit spojitosti při práci s prostorem v rámci lineární algebry. Tvorbu enginu bych doporučil každému, kdo chce lépe chápat strukturování dat či vidět, jak matematiku lze aplikovat v praxi.
+
+Práci považuji za úspěšnou a obohacující jak pro ostatní vývojáře, tak pro mě samotného. Byla vytvořena funkční, minimalistická alternativa pro komerční řešení. Cíl práce byl tedy splněn. Zdrojový kód je dostupný pod open-source licencí GNU GPLv3 na portál GitHub. Projekt lze nalézt na odkaze: \\\mintinline{bash}{https://github.com/marcothelost/kedarium}.
 
 \pagebreak
 
 \section{Seznam použité literatury}
 
 \printbibliography[heading=none]
+
+\pagebreak
 
 \section{Seznam obrázků a tabulek}
 
