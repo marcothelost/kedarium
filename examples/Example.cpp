@@ -61,15 +61,18 @@ class ExampleWindow : public kdr::Window
 
       this->lights.push_back(kdr::Lights::Light(
         {0.f, 2.f, 3.f},
-        kdr::Color::White
+        kdr::Color::Red,
+        1.f
       ));
       this->lights.push_back(kdr::Lights::Light(
         {-3.f, 2.f, 3.f},
-        kdr::Color::Cyan
+        kdr::Color::Green,
+        1.f
       ));
       this->lights.push_back(kdr::Lights::Light(
         {3.f, 2.f, 3.f},
-        kdr::Color::Magenta
+        kdr::Color::Blue,
+        4.f
       ));
 
       this->bindShader("default");

@@ -22,9 +22,10 @@ namespace kdr
          * 
          * @param position The position of the light.
          * @param color The color of the light.
+         * @param intensity The intensity of the light.
          */
-        Light(const kdr::Space::Vec3& position, const kdr::Color::RGBA& color)
-        : position(position), color(color)
+        Light(const kdr::Space::Vec3& position, const kdr::Color::RGBA& color, const float intensity)
+        : position(position), color(color), intensity(intensity)
         {}
 
         /**
@@ -42,19 +43,23 @@ namespace kdr
          * @param index The index of the light in the array.
          * @param positionUniform The base name of the uniform variable for the light position in the array.
          * @param colorUniform The base name of the uniform variable for the light color in the array.
+         * @param intensityUniform The base name of the uniform variable for the light intensity in the array.
          */
-        void apply(const GLuint shaderID, const unsigned int index, const std::string& positionUniform, const std::string& colorUniform) const
+        void apply(const GLuint shaderID, const unsigned int index, const std::string& positionUniform, const std::string& colorUniform, const std::string& intensityUniform) const
         {
           GLuint lightPosLoc = glGetUniformLocation(shaderID, (positionUniform + "[" + std::to_string(index) +"]").c_str());
           GLuint lightColLoc = glGetUniformLocation(shaderID, (colorUniform + "[" + std::to_string(index) +"]").c_str());
+          GLuint lightIntLoc = glGetUniformLocation(shaderID, (intensityUniform + "[" + std::to_string(index) +"]").c_str());
 
           glUniform3f(lightPosLoc, this->position.x, this->position.y, this->position.z);
           glUniform3f(lightColLoc, this->color.red, this->color.green, this->color.blue);
+          glUniform1f(lightIntLoc, this->intensity);
         }
 
       private:
-        kdr::Space::Vec3 position {0.f};
-        kdr::Color::RGBA color    {kdr::Color::White};
+        kdr::Space::Vec3 position  {0.f};
+        kdr::Color::RGBA color     {kdr::Color::White};
+        float            intensity;
     };
   }
 }

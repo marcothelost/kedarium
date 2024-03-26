@@ -282,7 +282,7 @@ namespace kdr
         int index = 0;
         for (kdr::Lights::Light& light : lights)
         {
-          light.apply(this->boundShader->getID(), index, "lightPos", "lightCol");
+          light.apply(this->boundShader->getID(), index, "lightPos", "lightCol", "lightInt");
           index++;
         }
         this->boundShader->setVector3("camPos", this->getBoundCamera()->getPosition()); 
