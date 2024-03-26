@@ -49,13 +49,11 @@ class ExampleWindow : public kdr::Window
   public:
     using kdr::Window::Window;
 
-    ~ExampleWindow()
-    {
-      this->defaultShader.Delete();
-    }
-
     void initialize()
     {
+      this->addShader("default", "assets/Shaders/default.vert", "assets/Shaders/default.frag");
+      this->addShader("gui", "assets/Shaders/gui.vert", "assets/Shaders/gui.frag");
+
       this->addTexture("stove", "assets/Textures/stove.png");
       this->addTexture("floor", "assets/Textures/tiles.png");
       this->addTexture("tiles", "assets/Textures/marble_tiles.png");
@@ -74,7 +72,7 @@ class ExampleWindow : public kdr::Window
         kdr::Color::Magenta
       ));
 
-      this->bindShader(&this->defaultShader);
+      this->bindShader("default");
       this->useLights(this->lights);
     }
 
@@ -110,29 +108,21 @@ class ExampleWindow : public kdr::Window
 
     void render()
     {
-      this->bindShader(&defaultShader);
+      this->bindShader("default");
       this->bindTexture("stove");
       this->renderSolid(object);
       this->bindTexture("tiles");
       this->renderSolid(wall);
       this->bindTexture("floor");
       this->renderSolid(plane);
-      this->bindShader(&guiShader);
+      this->bindShader("gui");
       this->use2D();
       this->bindTexture("crosshair");
       this->renderElement(crosshair);
-      this->bindShader(&defaultShader);
+      this->bindShader("default");
     }
 
   private:
-    kdr::Graphics::Shader defaultShader {
-      "assets/Shaders/default.vert",
-      "assets/Shaders/default.frag"
-    };
-    kdr::Graphics::Shader guiShader {
-      "assets/Shaders/gui.vert",
-      "assets/Shaders/gui.frag"
-    };
     kdr::GUI::Crosshair crosshair {
       {WINDOW_WIDTH, WINDOW_HEIGHT},
       16.f

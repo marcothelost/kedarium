@@ -170,6 +170,21 @@ namespace kdr
       }
 
       /**
+       * @brief Adds a shader to the shader manager.
+       * 
+       * @param name The name of the shader.
+       * @param vertexPath The file path to the vertex shader source code.
+       * @param fragmentPath The file path to the fragment shader source code.
+       */
+      void addShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath)
+      {
+        kdr::Graphics::Shader shader {
+          vertexPath,
+          fragmentPath
+        };
+        this->shaders.add(name, shader);
+      }
+      /**
        * @brief Adds a texture to the texture manager.
        * 
        * @param name The name to associate with the texture.
@@ -187,12 +202,17 @@ namespace kdr
       }
 
       /**
-       * @brief Binds a shader to the window.
+       * @brief Binds a shader to the window by name.
        * 
-       * @param shader A pointer to the shader object to bind.
+       * @param name The name of the shader to bind.
        */
-      void bindShader(kdr::Graphics::Shader* shader)
+      void bindShader(const std::string& name)
       {
+        kdr::Graphics::Shader* shader = this->shaders.get(name);
+        if (shader == NULL)
+        {
+          return;
+        }
         this->boundShader = shader;
         shader->Use();
       }
@@ -301,6 +321,7 @@ namespace kdr
       bool     fullscreenEnabled {false};
       bool     canUseFullscreen  {true};
 
+      kdr::Core::Manager<kdr::Graphics::Shader> shaders;
       kdr::Core::Manager<kdr::Graphics::Texture> textures;
 
       /**
