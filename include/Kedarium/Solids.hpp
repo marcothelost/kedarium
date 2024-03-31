@@ -54,7 +54,7 @@ namespace kdr
          */
         void translate(const kdr::Space::Vec3& vec)
         {
-          this->model = kdr::Space::translate(this->model, vec);
+          this->position += vec;
         }
         /**
          * @brief Rotates the solid object around the X-axis by the given angle.
@@ -86,8 +86,9 @@ namespace kdr
          */
         void applyModelMatrix(const GLuint shaderID, const std::string& uniform) const
         {
+          kdr::Space::Mat4 usedMatrix = kdr::Space::translate(this->model, this->position);
           GLuint modelLoc = glGetUniformLocation(shaderID, uniform.c_str());
-          glUniformMatrix4fv(modelLoc, 1, GL_FALSE, kdr::Space::valuePointer(this->model));
+          glUniformMatrix4fv(modelLoc, 1, GL_FALSE, kdr::Space::valuePointer(usedMatrix));
         }
         /**
          * @brief Renders the solid object.

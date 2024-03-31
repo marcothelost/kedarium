@@ -54,29 +54,37 @@ class ExampleWindow : public kdr::Window
       this->addShader("default", "assets/Shaders/default.vert", "assets/Shaders/default.frag");
       this->addShader("gui", "assets/Shaders/gui.vert", "assets/Shaders/gui.frag");
 
+      this->addTexture("nathan", "assets/Textures/nathan.png");
       this->addTexture("stove", "assets/Textures/stove.png");
       this->addTexture("floor", "assets/Textures/tiles.png");
       this->addTexture("tiles", "assets/Textures/marble_tiles.png");
       this->addTexture("crosshair", "assets/Textures/crosshair.png");
 
       this->lights.push_back(kdr::Lights::Light(
-        {0.f, 2.f, 3.f},
-        kdr::Color::Red,
-        1.f
-      ));
-      this->lights.push_back(kdr::Lights::Light(
         {-3.f, 2.f, 3.f},
-        kdr::Color::Green,
-        1.f
+        kdr::Color::Magenta,
+        2.5f
       ));
       this->lights.push_back(kdr::Lights::Light(
         {3.f, 2.f, 3.f},
-        kdr::Color::Blue,
-        4.f
+        kdr::Color::Cyan,
+        1.5f
+      ));
+      this->lights.push_back(kdr::Lights::Light(
+        {-3.f, 2.f, -3.f},
+        kdr::Color::Yellow,
+        1.5f
+      ));
+      this->lights.push_back(kdr::Lights::Light(
+        {3.f, 2.f, -3.f},
+        kdr::Color::Green,
+        1.5f
       ));
 
       this->bindShader("default");
       this->useLights(this->lights);
+
+      this->stove.rotateY(180.f);
     }
 
     void onResize()
@@ -112,8 +120,10 @@ class ExampleWindow : public kdr::Window
     void render()
     {
       this->bindShader("default");
+      this->bindTexture("nathan");
+      this->renderSolid(nathan);
       this->bindTexture("stove");
-      this->renderSolid(object);
+      this->renderSolid(stove);
       this->bindTexture("tiles");
       this->renderSolid(wall);
       this->bindTexture("floor");
@@ -135,10 +145,13 @@ class ExampleWindow : public kdr::Window
       20.f,
       20.f
     };
-    kdr::Solids::Mesh object {
+    kdr::Solids::Mesh nathan {
       {0.f, 0.f, 0.f},
-      "assets/Objects/stove.obj",
-      {1.f, 10.f, 1.f}
+      "assets/Objects/nathan.obj"
+    };
+    kdr::Solids::Mesh stove {
+      {0.f, 0.f, 1.f},
+      "assets/Objects/stove.obj"
     };
     kdr::Solids::Cuboid wall {
       {0.f, 1.5f, -0.6f},
