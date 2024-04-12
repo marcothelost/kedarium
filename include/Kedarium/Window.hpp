@@ -170,28 +170,66 @@ namespace kdr
       }
 
       /**
-       * @brief Binds a shader to the window.
+       * @brief Adds a shader to the shader manager.
        * 
-       * @param shader A pointer to the shader object to bind.
+       * @param name The name of the shader.
+       * @param vertexPath The file path to the vertex shader source code.
+       * @param fragmentPath The file path to the fragment shader source code.
        */
-      void bindShader(kdr::Graphics::Shader* shader)
+      void addShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath)
       {
+        kdr::Graphics::Shader shader {
+          vertexPath,
+          fragmentPath
+        };
+        this->shaders.add(name, shader);
+      }
+      /**
+       * @brief Adds a texture to the texture manager.
+       * 
+       * @param name The name to associate with the texture.
+       * @param pngPath The path to the PNG file used to create the texture.
+       */
+      void addTexture(const std::string& name, const std::string& pngPath)
+      {
+        kdr::Graphics::Texture texture {
+          pngPath,
+          GL_TEXTURE_2D,
+          GL_TEXTURE0,
+          GL_UNSIGNED_BYTE
+        };
+        this->textures.add(name, texture);
+      }
+
+      /**
+       * @brief Binds a shader to the window by name.
+       * 
+       * @param name The name of the shader to bind.
+       */
+      void bindShader(const std::string& name)
+      {
+        kdr::Graphics::Shader* shader = this->shaders.get(name);
+        if (shader == NULL)
+        {
+          return;
+        }
         this->boundShader = shader;
         shader->Use();
       }
       /**
        * @brief Binds a texture to the window.
        * 
-       * @param texture The texture object to bind.
+       * @param name The name of the texture to bind.
        */
-      void bindTexture(const kdr::Graphics::Texture& texture)
+      void bindTexture(const std::string& name)
       {
-        if (this->boundShader == NULL)
+        kdr::Graphics::Texture* texture = this->textures.get(name);
+        if (this->boundShader == NULL || texture == NULL)
         {
           return;
         }
-        texture.TextureUnit(this->boundShader->getID(), "tex0", 0);
-        texture.Bind();
+        texture->TextureUnit(this->boundShader->getID(), "tex0", 0);
+        texture->Bind();
       }
       /**
        * @brief Binds a camera to the window.
@@ -244,7 +282,7 @@ namespace kdr
         int index = 0;
         for (kdr::Lights::Light& light : lights)
         {
-          light.apply(this->boundShader->getID(), index, "lightPos", "lightCol");
+          light.apply(this->boundShader->getID(), index, "lightPos", "lightCol", "lightInt");
           index++;
         }
         this->boundShader->setVector3("camPos", this->getBoundCamera()->getPosition()); 
@@ -282,6 +320,9 @@ namespace kdr
       kdr::Key fullscreenKey     {kdr::Key::F};
       bool     fullscreenEnabled {false};
       bool     canUseFullscreen  {true};
+
+      kdr::Core::Manager<kdr::Graphics::Shader> shaders;
+      kdr::Core::Manager<kdr::Graphics::Texture> textures;
 
       /**
        * @brief Initializes the window.

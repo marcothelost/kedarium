@@ -1,6 +1,6 @@
 #include "Kedarium/Object.hpp"
 
-bool kdr::Object::loadFromObj(const std::string& objPath, std::vector<GLfloat>& oVertices, GLsizeiptr& oVerticesSize, std::vector<GLuint>& oIndices, GLsizeiptr& oIndicesSize)
+bool kdr::Object::loadFromObj(const std::string& objPath, std::vector<GLfloat>& oVertices, GLsizeiptr& oVerticesSize, std::vector<GLuint>& oIndices, GLsizeiptr& oIndicesSize, const kdr::Space::Vec3& dimensions)
 {
   std::ifstream file(objPath);
   if (!file.is_open())
@@ -103,15 +103,22 @@ bool kdr::Object::loadFromObj(const std::string& objPath, std::vector<GLfloat>& 
   std::vector<GLfloat> vertices;
   std::vector<GLuint>  indices;
 
+  bool hasDimensions =
+    dimensions.x != 0.f && dimensions.y != 0.f && dimensions.z != 0.f;
+
+  float length = hasDimensions ? dimensions.x : 1.f;
+  float height = hasDimensions ? dimensions.y : 1.f;
+  float width  = hasDimensions ? dimensions.z : 1.f;
+
   for (int i = 0; i < (int)(faceData.size() / 3); i++)
   {
     int posIndex = faceData.at(i * 3);
     int texIndex = faceData.at(i * 3 + 1);
     int normIndex = faceData.at(i * 3 + 2);
 
-    vertices.push_back(vecVals.at((posIndex - 1) * 3));
-    vertices.push_back(vecVals.at((posIndex - 1) * 3 + 1));
-    vertices.push_back(vecVals.at((posIndex - 1) * 3 + 2));
+    vertices.push_back(vecVals.at((posIndex - 1) * 3)     * length);
+    vertices.push_back(vecVals.at((posIndex - 1) * 3 + 1) * height);
+    vertices.push_back(vecVals.at((posIndex - 1) * 3 + 2) * width);
     vertices.push_back(1.f);
     vertices.push_back(1.f);
     vertices.push_back(1.f);

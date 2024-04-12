@@ -49,43 +49,55 @@ class ExampleWindow : public kdr::Window
   public:
     using kdr::Window::Window;
 
-    ~ExampleWindow()
-    {
-      this->defaultShader.Delete();
-    }
-
     void initialize()
     {
-      this->lights.push_back(kdr::Lights::Light(
-        {0.f, 2.f, 3.f},
-        kdr::Color::White
-      ));
+      this->addShader("default", "assets/Shaders/default.vert", "assets/Shaders/default.frag");
+      this->addShader("gui", "assets/Shaders/gui.vert", "assets/Shaders/gui.frag");
+
+      this->addTexture("nathan", "assets/Textures/nathan.png");
+      this->addTexture("stove", "assets/Textures/stove.png");
+      this->addTexture("floor", "assets/Textures/tiles.png");
+      this->addTexture("tiles", "assets/Textures/marble_tiles.png");
+      this->addTexture("crosshair", "assets/Textures/crosshair.png");
+
       this->lights.push_back(kdr::Lights::Light(
         {-3.f, 2.f, 3.f},
-        kdr::Color::Cyan
+        kdr::Color::Magenta,
+        2.5f
       ));
       this->lights.push_back(kdr::Lights::Light(
         {3.f, 2.f, 3.f},
-        kdr::Color::Magenta
+        kdr::Color::Cyan,
+        1.5f
+      ));
+      this->lights.push_back(kdr::Lights::Light(
+        {-3.f, 2.f, -3.f},
+        kdr::Color::Yellow,
+        1.5f
+      ));
+      this->lights.push_back(kdr::Lights::Light(
+        {3.f, 2.f, -3.f},
+        kdr::Color::Green,
+        1.5f
       ));
 
-      this->bindShader(&this->defaultShader);
+      this->bindShader("default");
       this->useLights(this->lights);
+
+      this->stove.rotateY(180.f);
     }
 
     void onResize()
     {
-      this->crosshair.setPosition({
-        (float)this->getWidth() / 2.f - 8.f,
-        (float)this->getHeight() / 2.f - 8.f
+      this->crosshair.update({
+        (float)this->getWidth(),
+        (float)this->getHeight()
       });
     }
 
   protected:
     void update()
     {
-      this->object.rotateY(50.f * this->getDeltaTime());
-
       if (this->getBoundCamera() == NULL || !this->getBoundCamera()->getLocked())
       {
         return;
@@ -107,56 +119,25 @@ class ExampleWindow : public kdr::Window
 
     void render()
     {
-      this->bindShader(&defaultShader);
-      this->bindTexture(stoveTexture);
-      this->renderSolid(object);
-      this->bindTexture(marbleTexture);
+      this->bindShader("default");
+      this->bindTexture("nathan");
+      this->renderSolid(nathan);
+      this->bindTexture("stove");
+      this->renderSolid(stove);
+      this->bindTexture("tiles");
       this->renderSolid(wall);
-      this->bindTexture(floorTexture);
+      this->bindTexture("floor");
       this->renderSolid(plane);
-      this->bindShader(&guiShader);
+      this->bindShader("gui");
       this->use2D();
-      this->bindTexture(crosshairTexture);
+      this->bindTexture("crosshair");
       this->renderElement(crosshair);
-      this->bindShader(&defaultShader);
+      this->bindShader("default");
     }
 
   private:
-    kdr::Graphics::Shader defaultShader {
-      "assets/Shaders/default.vert",
-      "assets/Shaders/default.frag"
-    };
-    kdr::Graphics::Shader guiShader {+
-      "assets/Shaders/gui.vert",
-      "assets/Shaders/gui.frag"
-    };
-    kdr::Graphics::Texture stoveTexture {
-      "assets/Textures/stove.png",
-      GL_TEXTURE_2D,
-      GL_TEXTURE0,
-      GL_UNSIGNED_BYTE
-    };
-    kdr::Graphics::Texture floorTexture {
-      "assets/Textures/tiles.png",
-      GL_TEXTURE_2D,
-      GL_TEXTURE0,
-      GL_UNSIGNED_BYTE
-    };
-    kdr::Graphics::Texture marbleTexture {
-      "assets/Textures/marble_tiles.png",
-      GL_TEXTURE_2D,
-      GL_TEXTURE0,
-      GL_UNSIGNED_BYTE
-    };
-    kdr::Graphics::Texture crosshairTexture {
-      "assets/Textures/crosshair.png",
-      GL_TEXTURE_2D,
-      GL_TEXTURE0,
-      GL_UNSIGNED_BYTE
-    };
-    kdr::GUI::Element crosshair {
-      {(float)WINDOW_WIDTH / 2.f - 8.f, (float)WINDOW_HEIGHT / 2.f - 8.f},
-      16.f,
+    kdr::GUI::Crosshair crosshair {
+      {WINDOW_WIDTH, WINDOW_HEIGHT},
       16.f
     };
     kdr::Solids::Plane plane {
@@ -164,8 +145,12 @@ class ExampleWindow : public kdr::Window
       20.f,
       20.f
     };
-    kdr::Solids::Mesh object {
+    kdr::Solids::Mesh nathan {
       {0.f, 0.f, 0.f},
+      "assets/Objects/nathan.obj"
+    };
+    kdr::Solids::Mesh stove {
+      {0.f, 0.f, 1.f},
       "assets/Objects/stove.obj"
     };
     kdr::Solids::Cuboid wall {
@@ -206,9 +191,6 @@ int main()
 
   // Initializing the Window
   window.initialize();
-
-  // Clear Color
-  kdr::Color::RGBA clearColor {kdr::Color::Black};
 
   // Info Logs
   kdr::Core::printEngineInfo();

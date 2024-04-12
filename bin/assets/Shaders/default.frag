@@ -19,7 +19,7 @@ uniform sampler2D tex0;
 
 void main()
 {
-  float ambientFactor = 0.05f;
+  float ambientFactor = 0.15f;
   vec3 ambient = vec3(0.f);
 
   vec3 normal = normalize(vertNorm);

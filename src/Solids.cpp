@@ -196,14 +196,14 @@ void kdr::Solids::Pyramid::render() const
   this->VAO->Unbind();
 }
 
-kdr::Solids::Mesh::Mesh(const kdr::Space::Vec3& position, const std::string objPath) : kdr::Solids::Solid(position)
+kdr::Solids::Mesh::Mesh(const kdr::Space::Vec3& position, const std::string objPath, const kdr::Space::Vec3& dimensions) : kdr::Solids::Solid(position)
 {
-  std::vector<GLfloat> vertices {NULL};
-  std::vector<GLuint>  indices  {NULL};
+  std::vector<GLfloat> vertices;
+  std::vector<GLuint>  indices;
   GLsizeiptr verticesSize {0};
   GLsizeiptr indicesSize  {0};
 
-  kdr::Object::loadFromObj(objPath, vertices, verticesSize, indices, indicesSize);
+  kdr::Object::loadFromObj(objPath, vertices, verticesSize, indices, indicesSize, dimensions);
   this->initializeMembers(&vertices[0], verticesSize, &indices[0], indicesSize);
   this->indexCount = indices.size();
 }
